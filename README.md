@@ -1,7 +1,7 @@
 # BaitDetector: Phishing URL Detection
 
 <p align="center">
-<img align="center" width="752" alt="image" src="[https://github.com/user-attachments/assets/63f10b34-462c-4070-8a29-c29159d90f22](https://github.com/user-attachments/assets/d7023b1e-a62b-4acb-a1db-56f8b46dfe66)">
+<img align="center" width="752" alt="image" src="https://github.com/user-attachments/assets/d7023b1e-a62b-4acb-a1db-56f8b46dfe66">
 </p>
 
 ## Project Overview

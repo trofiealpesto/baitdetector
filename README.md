@@ -49,12 +49,6 @@ Several plots are generated to help understand the distribution of features and 
 - Correlation heatmap
 - Confusion matrix
 
-## Future Improvements
-- Implement real-time URL checking functionality
-- Expand the feature set to include more advanced indicators of phishing
-- Experiment with other machine learning algorithms or ensemble methods
-- Develop a user interface for easy interaction with the model
-
 ## Disclaimer
 This tool is for educational and research purposes only. It should not be used as the sole method for detecting phishing URLs in a production environment. Always use caution when dealing with suspicious URLs and consult with cybersecurity professionals for comprehensive protection.
 

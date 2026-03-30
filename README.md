@@ -27,7 +27,7 @@ flowchart LR
     E --> F[Promote CLI]
     F --> G[Promoted model bundle]
     G --> H[FastAPI webapp]
-    H --> I[/api/scan]
+    H --> I["/api/scan"]
     H --> J[React SPA]
 ```
 

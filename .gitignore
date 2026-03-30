@@ -1,0 +1,15 @@
+__pycache__/
+.pytest_cache/
+.venv/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.DS_Store
+frontend/node_modules/
+frontend/dist/
+
+data/raw/
+data/normalized/
+data/baitdetector.db
+data/models/candidate/

@@ -1,0 +1,73 @@
+name: Weekly Train Promote
+
+on:
+  schedule:
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  train-promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+          cd frontend
+          npm ci
+      - name: Run frontend tests
+        run: |
+          cd frontend
+          npm test -- --run
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+      - name: Ingest live feeds
+        env:
+          PHISHTANK_APP_KEY: ${{ secrets.PHISHTANK_APP_KEY }}
+          SOURCE_USER_AGENT: baitdetector-github-actions
+        run: python -m baitdetector.ingest --tranco-limit 200000
+      - name: Train candidate model
+        run: python -m baitdetector.train
+      - name: Validate test suite
+        run: python -m pytest
+      - name: Promote candidate if gates pass
+        run: python -m baitdetector.promote
+      - name: Commit promoted model bundle
+        run: |
+          BRANCH_NAME="${GITHUB_REF_NAME:-main}"
+          if [ ! -f data/models/promoted/model_bundle.joblib ] || [ ! -f data/models/promoted/metadata.json ]; then
+            echo "Promoted model bundle missing; nothing to publish."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/models/promoted
+          if git diff --cached --quiet; then
+            echo "No promoted model changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: publish promoted model bundle"
+          git push origin HEAD:${BRANCH_NAME}
+      - name: Upload promoted model
+        uses: actions/upload-artifact@v4
+        with:
+          name: baitdetector-promoted-model
+          path: |
+            data/models/promoted/model_bundle.joblib
+            data/models/promoted/metadata.json
+            data/models/candidate/training_summary.json
+            data/models/candidate/leaderboard.json

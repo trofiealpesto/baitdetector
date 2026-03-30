@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "baitdetector"
+version = "0.2.0"
+description = "Phishing-first URL risk webapp and retraining pipeline."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [
+  { name = "Giuva" }
+]
+dependencies = [
+  "fastapi>=0.115,<1.0",
+  "httpx>=0.27,<1.0",
+  "jinja2>=3.1,<4.0",
+  "joblib>=1.4,<2.0",
+  "numpy>=1.26,<3.0",
+  "pandas>=2.2,<3.0",
+  "psycopg[binary]>=3.2,<4.0",
+  "pyarrow>=16,<20",
+  "python-multipart>=0.0.9,<1.0",
+  "requests>=2.32,<3.0",
+  "scikit-learn>=1.5,<2.0",
+  "sqlalchemy>=2.0,<3.0",
+  "tldextract>=5.1,<6.0",
+  "uvicorn>=0.30,<1.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3,<9.0"
+]
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+baitdetector = ["static/**/*"]

@@ -1169,7 +1169,7 @@ input {
     align-items: flex-end;
     width: 100%;
     max-width: 100%;
-    gap: 4px;
+    gap: 2px;
   }
 
   .left-column {
@@ -1178,13 +1178,13 @@ input {
   }
 
   .left-column--mobile-centered {
-    transform: translateY(clamp(72px, 12vh, 132px));
+    transform: translateY(clamp(96px, 14.5vh, 148px));
   }
 
   .brand-title {
     flex: 0 1 auto;
     min-width: 0;
-    font-size: clamp(3.05rem, 15.8vw, 5.3rem);
+    font-size: clamp(2.92rem, 15.2vw, 5.1rem);
   }
 
   .stage-panel {
@@ -1197,18 +1197,18 @@ input {
   }
 
   .repo-link {
-    flex: 0 0 44px;
-    width: 44px;
-    min-width: 44px;
-    height: 44px;
+    flex: 0 0 40px;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
     align-self: flex-end;
     margin-top: 0;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
   }
 
   .repo-icon {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
 
   .leaderboard-row {

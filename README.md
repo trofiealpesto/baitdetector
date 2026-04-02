@@ -16,7 +16,7 @@ This is a hobby project. The Vercel-hosted app is only a demo deployment; you ca
 ## What You Can Try
 - Check a login-looking URL and see whether the local model leans benign, suspicious, or phishing
 - Compare obvious benign domains against synthetic phishing-style domains
-- Open `under the hood` to inspect the shipped model snapshot, thresholds, and the latest ingest/train dates exposed by the app
+- Open `under the hood` to inspect the shipped model snapshot, thresholds, and the latest ingestion dates by source
 
 ## What The App Actually Does
 - Scores one URL at a time and returns a phishing probability, verdict, risk band, reasons, and local threat-intel context
@@ -122,7 +122,7 @@ Response shape:
 
 `GET /api/model-info`
 
-Returns the current model version, model id/family, training and benchmark windows, feature set, last training date, last ingestion date, runtime thresholds, and evaluation summary.
+Returns the current model version, model id/family, training and benchmark windows, feature set, latest ingestion dates by source, runtime thresholds, and evaluation summary.
 
 ## Data Sources
 | Source | Role | Cadence | Notes |

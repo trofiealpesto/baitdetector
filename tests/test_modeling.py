@@ -68,6 +68,6 @@ def test_model_info_exposes_runtime_thresholds() -> None:
 
     assert info["model_id"] == "logistic_baseline"
     assert info["evaluation_mode"] == "bootstrap_fallback"
-    assert info["last_training_at"] == str(info["training_window"]["end"])
+    assert info["latest_ingestion_sources"] == {}
     assert info["runtime_thresholds"] == {"suspicious": 0.02, "phishing": 0.08}
     assert resolve_runtime_thresholds(bundle.metadata) == {"suspicious": 0.02, "phishing": 0.08}

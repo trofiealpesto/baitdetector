@@ -46,8 +46,7 @@ class ModelInfoResponse(BaseModel):
     validation_window: dict[str, Any]
     benchmark_window: dict[str, Any]
     feature_set_version: str
-    last_training_at: str | None = None
-    last_ingestion_at: str | None = None
+    latest_ingestion_sources: dict[str, Any]
     evaluation_mode: str
     evaluation: dict[str, Any]
     runtime_thresholds: dict[str, Any]

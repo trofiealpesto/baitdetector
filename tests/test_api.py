@@ -16,7 +16,17 @@ def test_api_scan_and_model_info(tmp_path) -> None:
     normalized_dir = settings.data_dir / "normalized"
     normalized_dir.mkdir(parents=True, exist_ok=True)
     (normalized_dir / "latest_manifest.json").write_text(
-        json.dumps({"fetched_at": "2026-03-24T09:30:00+00:00", "sources": {}, "total_rows": 60}),
+        json.dumps(
+            {
+                "fetched_at": "2026-03-24T09:30:00+00:00",
+                "sources": {
+                    "phishing_database": {"last_modified": None, "count": 20},
+                    "phishtank": {"last_modified": None, "count": 20},
+                    "tranco": {"last_modified": None, "count": 20},
+                },
+                "total_rows": 60,
+            }
+        ),
         encoding="utf-8",
     )
     app = create_app(settings)
@@ -32,8 +42,11 @@ def test_api_scan_and_model_info(tmp_path) -> None:
         assert model_payload["model_id"] == "logistic_baseline"
         assert model_payload["model_family"] == "logistic_regression"
         assert model_payload["evaluation_mode"] == "bootstrap_fallback"
-        assert model_payload["last_training_at"] == model_payload["training_window"]["end"]
-        assert model_payload["last_ingestion_at"] == "2026-03-24T09:30:00+00:00"
+        assert model_payload["latest_ingestion_sources"] == {
+            "phishing_database": "2026-03-24T09:30:00+00:00",
+            "phishtank": "2026-03-24T09:30:00+00:00",
+            "tranco": "2026-03-24T09:30:00+00:00",
+        }
         assert model_payload["runtime_thresholds"] == {"suspicious": 0.02, "phishing": 0.08}
 
         payload = scan.json()

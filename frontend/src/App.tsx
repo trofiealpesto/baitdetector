@@ -464,16 +464,10 @@ export default function App() {
   const isMobileIdleCollapsed = isNarrowViewport && uiStage === "idle" && !mobileUnderHoodOpen;
   const suspiciousThreshold = asNumber(runtimeThresholds["suspicious"]) ?? 0.25;
   const phishingThreshold = asNumber(runtimeThresholds["phishing"]) ?? 0.45;
-  const pipelineRows = [
-    {
-      label: "last ingestion",
-      value: modelInfo ? formatShortDate(modelInfo.last_ingestion_at) : modelInfoError || "loading...",
-    },
-    {
-      label: "last training",
-      value: modelInfo ? formatShortDate(modelInfo.last_training_at) : modelInfoError || "loading...",
-    },
-  ];
+  const ingestionRows = Object.entries(modelInfo?.latest_ingestion_sources ?? {}).map(([label, value]) => ({
+    label: label.replaceAll("_", " "),
+    value: formatShortDate(value),
+  }));
   function renderUnderTheHood() {
     return (
       <div className="underhood-grid">
@@ -492,15 +486,22 @@ export default function App() {
             </div>
           </div>
           <div className="section-header">
-            <p className="panel-label">latest pipeline</p>
+            <p className="panel-label">latest ingestion</p>
           </div>
           <div className="info-list">
-            {pipelineRows.map((row) => (
-              <div className="info-row" key={row.label}>
-                <span className="info-key">{row.label}</span>
-                <span className="info-value">{row.value}</span>
+            {ingestionRows.length > 0 ? (
+              ingestionRows.map((row) => (
+                <div className="info-row" key={row.label}>
+                  <span className="info-key">{row.label}</span>
+                  <span className="info-value">{row.value}</span>
+                </div>
+              ))
+            ) : (
+              <div className="info-row">
+                <span className="info-key">status</span>
+                <span className="info-value">{modelInfoError || "loading..."}</span>
               </div>
-            ))}
+            )}
           </div>
         </section>
 

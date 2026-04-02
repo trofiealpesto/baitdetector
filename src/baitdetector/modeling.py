@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
 from dataclasses import dataclass, field
 from pathlib import Path
-import re
 from typing import Any, Literal
 
 import joblib
@@ -49,8 +47,6 @@ SIGNAL_GROUP_LABELS = {
     "routing": "Routing",
     "trust": "Trust",
 }
-
-MODEL_VERSION_TIMESTAMP = re.compile(r"baitdetector-(\d{8}T\d{6}Z)")
 
 
 @dataclass(frozen=True)
@@ -119,21 +115,6 @@ def resolve_runtime_thresholds(metadata: dict[str, Any]) -> dict[str, float]:
     if suspicious > phishing:
         suspicious = max(0.0, round(phishing * 0.5, 4))
     return {"suspicious": round(suspicious, 4), "phishing": round(phishing, 4)}
-
-
-def infer_last_training_at(metadata: dict[str, Any]) -> str | None:
-    model_version = str(metadata.get("model_version", ""))
-    match = MODEL_VERSION_TIMESTAMP.search(model_version)
-    if match:
-        parsed = datetime.strptime(match.group(1), "%Y%m%dT%H%M%SZ").replace(tzinfo=timezone.utc)
-        return parsed.isoformat()
-
-    training_window = metadata.get("training_window")
-    if isinstance(training_window, dict):
-        training_end = training_window.get("end")
-        if training_end:
-            return str(training_end)
-    return None
 
 
 def build_pipeline(
@@ -265,7 +246,7 @@ class ModelBundle:
             "validation_window": self.metadata.get("validation_window", {}),
             "benchmark_window": self.metadata.get("benchmark_window", {}),
             "feature_set_version": self.metadata.get("feature_set_version", FEATURE_SET_VERSION),
-            "last_training_at": infer_last_training_at(self.metadata),
+            "latest_ingestion_sources": {},
             "evaluation_mode": self.metadata.get("evaluation_mode", "bootstrap_fallback"),
             "evaluation": self.metadata.get("evaluation", {}),
             "runtime_thresholds": runtime_thresholds,

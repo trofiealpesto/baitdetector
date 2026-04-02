@@ -461,6 +461,7 @@ export default function App() {
   const evaluation = asRecord(modelInfo?.evaluation) ?? {};
   const runtimeThresholds = asRecord(modelInfo?.runtime_thresholds) ?? asRecord(evaluation["runtime_thresholds"]) ?? {};
   const featureCorrelation = modelDetails?.feature_correlation ?? null;
+  const isMobileIdleCollapsed = isNarrowViewport && uiStage === "idle" && !mobileUnderHoodOpen;
   const suspiciousThreshold = asNumber(runtimeThresholds["suspicious"]) ?? 0.25;
   const phishingThreshold = asNumber(runtimeThresholds["phishing"]) ?? 0.45;
   const freshnessRows = Object.entries(modelInfo?.source_freshness ?? {})
@@ -768,8 +769,8 @@ export default function App() {
         </video>
       </div>
 
-      <div className="app-grid">
-        <motion.section className="left-column">
+      <div className={`app-grid${isMobileIdleCollapsed ? " app-grid--mobile-centered" : ""}`}>
+        <motion.section className={`left-column${isMobileIdleCollapsed ? " left-column--mobile-centered" : ""}`}>
           <motion.div className="title-row">
             <h1 className="brand-title">baitdetector</h1>
             <a

@@ -283,12 +283,13 @@ input {
   border: 0;
   padding: 0;
   background: transparent;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 22px;
   color: var(--ink);
   cursor: pointer;
+  text-align: center;
 }
 
 .mobile-underhood-toggle-copy {
@@ -1157,6 +1158,12 @@ input {
     padding-bottom: 10px;
   }
 
+  .app-grid--mobile-centered {
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
   .title-row {
     flex-direction: row;
     justify-content: flex-start;
@@ -1168,6 +1175,10 @@ input {
 
   .left-column {
     gap: 12px;
+  }
+
+  .left-column--mobile-centered {
+    align-content: center;
   }
 
   .brand-title {
@@ -1182,7 +1193,7 @@ input {
   }
 
   .stage-panel--idle {
-    gap: 12px;
+    gap: 8px;
   }
 
   .repo-link {
@@ -1209,7 +1220,7 @@ input {
 
   .idle-info--mobile {
     gap: 10px;
-    padding-top: 10px;
+    padding-top: 6px;
   }
 
   .idle-info--collapsed {
@@ -1222,7 +1233,7 @@ input {
   }
 
   .mobile-underhood-toggle {
-    gap: 10px;
+    gap: 18px;
   }
 
   .model-lab-toggle {
@@ -1348,6 +1359,10 @@ input {
     border-radius: 30px;
   }
 
+  .scan-form {
+    gap: 4px;
+  }
+
   .scan-input {
     padding: 10px 14px;
     font-size: 15px;
@@ -1357,6 +1372,14 @@ input {
   .rerun-button {
     width: 100%;
     padding: 10px 14px;
+  }
+
+  .field-error {
+    min-height: 0;
+  }
+
+  .field-error:empty {
+    display: none;
   }
 
   .section-header {

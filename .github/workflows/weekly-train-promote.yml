@@ -66,6 +66,7 @@ jobs:
         run: |
           BRANCH_NAME="${GITHUB_REF_NAME:-main}"
           git add data/models/promoted
+          git add -f data/normalized/latest_manifest.json
           if git diff --cached --quiet; then
             echo "No promoted model changes to commit."
             exit 0

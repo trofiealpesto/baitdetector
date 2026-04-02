@@ -499,7 +499,7 @@ export default function App() {
             ) : (
               <div className="info-row">
                 <span className="info-key">status</span>
-                <span className="info-value">{modelInfoError || "loading..."}</span>
+                <span className="info-value">{modelInfo ? "unavailable" : modelInfoError || "loading..."}</span>
               </div>
             )}
           </div>

@@ -5,11 +5,16 @@ on:
     - cron: "0 2 * * *"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   ingest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -22,6 +27,16 @@ jobs:
           PHISHTANK_APP_KEY: ${{ secrets.PHISHTANK_APP_KEY }}
           SOURCE_USER_AGENT: baitdetector-github-actions
         run: python -m baitdetector.ingest --tranco-limit 200000
+      - name: Configure git author
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Publish normalized history to model-data
+        run: |
+          python scripts/model_data_branch.py --repo-root . publish \
+            --branch model-data \
+            --keep 14 \
+            --commit-message "chore: update normalized snapshot history"
       - name: Upload normalized artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -29,4 +44,4 @@ jobs:
           path: |
             data/normalized/latest.parquet
             data/normalized/latest_manifest.json
-
+            data/normalized/urls-*.parquet

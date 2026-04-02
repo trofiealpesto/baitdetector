@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 
 from baitdetector.app import create_app
 
-from .support import build_test_settings, seed_promoted_bundle
+from .support import build_test_settings, seed_promoted_bundle, write_demo_snapshots
 
 
 def test_api_scan_and_model_info(tmp_path) -> None:
@@ -83,6 +83,23 @@ def test_model_details_exposes_signal_maps_and_optional_leaderboard(tmp_path) ->
         assert payload["promotion"]["reason"] == "shared_benchmark_win"
 
 
+def test_model_details_falls_back_to_latest_snapshot_when_promoted_summary_is_missing(tmp_path) -> None:
+    settings = build_test_settings(tmp_path)
+    seed_promoted_bundle(settings)
+    write_demo_snapshots(settings)
+    app = create_app(settings)
+
+    with TestClient(app) as client:
+        response = client.get("/api/model-details")
+
+        assert response.status_code == 200
+        payload = response.json()
+        assert payload["feature_correlation"]["source"] == "latest_snapshot_fallback"
+        assert payload["feature_correlation"]["rows"] > 0
+        assert payload["leaderboard"] == []
+        assert payload["promotion"] is None
+
+
 def test_home_renders_idle_stitch_stage(tmp_path) -> None:
     settings = build_test_settings(tmp_path)
     seed_promoted_bundle(settings)
@@ -90,7 +107,7 @@ def test_home_renders_idle_stitch_stage(tmp_path) -> None:
 
     with TestClient(app) as client:
         response = client.get("/")
-        video = client.head("/static/media/background-loop.webm")
+        video = client.get("/media/background-loop.webm")
         assert response.status_code == 200
         assert video.status_code == 200
         assert '<div id="root"></div>' in response.text

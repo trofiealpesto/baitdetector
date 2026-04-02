@@ -40,6 +40,7 @@ def test_promote_when_no_current_model(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(promote_module, "get_settings", lambda: settings)
     assert promote_module.promote() is True
     assert (settings.model_dir / "metadata.json").exists()
+    assert (settings.model_dir / "training_summary.json").exists()
     assert (settings.model_dir / "leaderboard.json").exists()
 
 

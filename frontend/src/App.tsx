@@ -744,7 +744,7 @@ export default function App() {
     <main className="app-shell">
       <div className="background-video" aria-hidden="true">
         <video autoPlay muted loop playsInline preload="auto">
-          <source src="/static/media/background-loop.webm" type="video/webm" />
+          <source src="/media/background-loop.webm" type="video/webm" />
         </video>
       </div>
 

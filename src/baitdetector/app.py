@@ -110,7 +110,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         description="Phishing-first URL risk scanner with a local model and no external enrichment.",
         lifespan=lifespan,
     )
-    app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+    if static_dir.exists():
+        app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
     @app.post("/api/scan", response_model=ScanResponse)
     async def scan_api(request: Request, payload: ScanRequest) -> ScanResponse:

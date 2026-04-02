@@ -36,7 +36,7 @@ flowchart LR
 - FastAPI JSON API
 - Vite + React + TypeScript + Framer Motion
 - scikit-learn linear challenger set with char TF-IDF and lexical features
-- SQLAlchemy with SQLite locally and Railway/Postgres-ready configuration via `DATABASE_URL`
+- SQLAlchemy with SQLite locally and Neon/Postgres-ready configuration via `DATABASE_URL`
 - GitHub Actions for CI and scheduled automation
 
 ## Quickstart
@@ -86,23 +86,30 @@ make run
 
 `make dev` starts FastAPI and Vite together with reload. `make run` builds the frontend first, then serves it from FastAPI via Uvicorn at `http://127.0.0.1:8000`.
 
-## Railway Deployment
-This repo is set up to deploy as a single Railway service using the root `Dockerfile`.
+## Vercel Deployment
+Production is designed as two Vercel Hobby projects plus GitHub Actions.
 
 Runtime shape:
-- Railway builds the React frontend in a Node stage and runs FastAPI in a Python 3.12 image
-- The app serves the SPA and API from one process, with `/healthz` as the Railway health check
-- The deployed image includes `data/models/promoted/` so the current promoted model ships with the app
+- `baitdetector-api`: FastAPI backend deployed from the repo root with `index.py` and [`vercel.json`](vercel.json)
+- `baitdetector-web`: Vite SPA deployed from [`frontend/`](frontend/) with [`frontend/vercel.json`](frontend/vercel.json)
+- `model-data` branch: durable normalized snapshot history for the trainer
+- `main` branch: promoted runtime bundle under `data/models/promoted/`
 
-Recommended Railway setup:
-1. Create a web service from this GitHub repo.
-2. Add a Railway Postgres service and expose its connection string as `DATABASE_URL`.
-3. Keep the default generated Railway domain; no custom domain is required.
+Recommended setup:
+1. Create a Neon free Postgres database.
+2. Create the `baitdetector-api` Vercel project from the repo root.
+3. Create the `baitdetector-web` Vercel project from the `frontend/` root directory.
+4. On `baitdetector-api`, set:
+   - `DATABASE_URL`
+   - `BAITDETECTOR_DATA_DIR=/var/task/data`
+   - `BAITDETECTOR_MODEL_DIR=/var/task/data/models/promoted`
+5. On `baitdetector-web`, leave API calls relative; the frontend rewrite proxies `/api/:path*` to `https://baitdetector-api.vercel.app/api/:path*`.
 
 Notes:
 - `DATABASE_URL` values like `postgres://...` and `postgresql://...` are normalized to the `psycopg` SQLAlchemy driver automatically.
-- The app still runs with local SQLite if `DATABASE_URL` is unset, but Postgres is the safer production choice on Railway.
-- The weekly training workflow commits updated files from `data/models/promoted/` back to the default branch, which gives Railway a fresh deployable model bundle instead of relying on expiring workflow artifacts.
+- The backend Vercel function bundles `data/models/promoted/**`, `data/normalized/latest.parquet`, and `data/normalized/latest_manifest.json`.
+- The frontend now owns the background media asset through `frontend/public/media/background-loop.webm`.
+- The root `Dockerfile` is still kept for local/manual hosting, but Railway is no longer the primary deployment path.
 
 ## Public API
 `POST /api/scan`
@@ -148,6 +155,29 @@ Passing `--training-path` forces bootstrap mode on a single parquet or CSV file.
 
 The bundled `data/demo/demo_training.csv` is a synthetic starter corpus so the app is runnable immediately without waiting for live feeds.
 
+## Snapshot History Contract
+The weekly trainer only leaves bootstrap fallback mode when it sees durable normalized snapshot history. That history now lives on the dedicated `model-data` branch:
+
+- `data/normalized/urls-*.parquet`
+- `data/normalized/latest.parquet`
+- `data/normalized/latest_manifest.json`
+
+Retention policy:
+- keep the latest 14 timestamped normalized snapshots
+- never store `data/raw/**` on `model-data`
+
+Operational flow:
+- `nightly-ingest.yml` runs ingest and publishes normalized history to `model-data`
+- `weekly-train-promote.yml` hydrates `data/normalized/` from `model-data`, runs one fresh ingest, trains, promotes when gates pass, asserts that the promoted bundle is complete, updates `model-data`, and commits `data/models/promoted/` back to the default branch
+
+Promoted runtime bundles are treated as incomplete unless they contain:
+- `model_bundle.joblib`
+- `metadata.json`
+- `training_summary.json`
+- `leaderboard.json`
+
+If `training_summary.json` is missing at runtime, `/api/model-details` falls back to building `feature_correlation` from bundled `data/normalized/latest.parquet`. In that fallback case, leaderboard data may be empty.
+
 ## Model Notes
 - Core lexical features include URL length, entropy, suspicious tokens, subdomain depth, punycode, raw IP hosts, redirect parameters, shortener detection, Tranco bucket, and local phishing-feed recency.
 - The weekly trainer compares exactly three linear challengers: baseline logistic regression, sparse L1 logistic regression, and SGD log-loss.
@@ -160,18 +190,36 @@ See [MODEL_CARD.md](MODEL_CARD.md) for assumptions, limitations, and evaluation 
 
 ## Automation
 - `ci.yml`: installs the package and runs tests on push and pull request
-- `nightly-ingest.yml`: downloads live feeds and uploads normalized artifacts
-- `weekly-train-promote.yml`: ingests live data, trains a candidate model, enforces promotion gates, commits any newly promoted runtime bundle into the repo, and uploads the promoted artifacts
+- `nightly-ingest.yml`: downloads live feeds, prunes normalized history to the latest 14 snapshots, publishes it to `model-data`, and uploads debug artifacts
+- `weekly-train-promote.yml`: hydrates normalized history from `model-data`, runs a fresh ingest, trains a candidate model, enforces promotion gates, asserts bundle completeness, commits any newly promoted runtime bundle into the repo, and republishes normalized history
 
 ## Repo Layout
 ```text
 src/baitdetector/       application, model, and CLI code
 data/demo/              synthetic starter dataset
 data/models/promoted/   promoted runtime artifact
+data/normalized/        latest local normalized snapshot and manifest
 dev/                    notebooks, design references, and non-runtime assets
 tests/                  unit, parser, model, and API tests
 .github/workflows/      CI and scheduled automation
 ```
+
+## One-Time Recovery
+To repopulate promoted diagnostics after migrating to the repaired pipeline:
+
+1. Seed the `model-data` branch with the current normalized files:
+   ```bash
+   python scripts/model_data_branch.py --repo-root . publish \
+     --branch model-data \
+     --keep 14 \
+     --commit-message "chore: seed normalized snapshot history"
+   ```
+2. Trigger `Weekly Train Promote` manually from GitHub Actions.
+3. Verify that `data/models/promoted/` on the default branch now contains:
+   - `model_bundle.joblib`
+   - `metadata.json`
+   - `training_summary.json`
+   - `leaderboard.json`
 
 ## Development
 ```bash

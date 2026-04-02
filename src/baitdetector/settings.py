@@ -51,22 +51,32 @@ def _resolve_project_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
+def _resolve_path(name: str, default: Path) -> Path:
+    configured = os.getenv(name)
+    if configured:
+        return Path(configured).expanduser().resolve()
+    return default.resolve()
+
+
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
     project_root = _resolve_project_root()
-    data_dir = project_root / "data"
-    model_dir = data_dir / "models" / "promoted"
+    data_dir = _resolve_path("BAITDETECTOR_DATA_DIR", project_root / "data")
+    model_dir = _resolve_path("BAITDETECTOR_MODEL_DIR", data_dir / "models" / "promoted")
     candidate_model_dir = data_dir / "models" / "candidate"
     database_url = _normalize_database_url(
         os.getenv("DATABASE_URL", f"sqlite:///{(data_dir / 'baitdetector.db').resolve()}")
     )
+    demo_data_path = data_dir / "demo" / "demo_training.csv"
+    if not demo_data_path.exists():
+        demo_data_path = project_root / "data" / "demo" / "demo_training.csv"
 
     return Settings(
         project_root=project_root,
         data_dir=data_dir,
         model_dir=model_dir,
         candidate_model_dir=candidate_model_dir,
-        demo_data_path=data_dir / "demo" / "demo_training.csv",
+        demo_data_path=demo_data_path,
         database_url=database_url,
         rate_limit_requests=_read_int("RATE_LIMIT_REQUESTS", 15),
         rate_limit_window_seconds=_read_int("RATE_LIMIT_WINDOW_SECONDS", 60),

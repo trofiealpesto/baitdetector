@@ -237,6 +237,10 @@ input {
   border-top: 1px solid var(--line);
 }
 
+.idle-info--collapsed {
+  gap: 0;
+}
+
 .idle-info-head {
   display: grid;
   gap: 8px;
@@ -266,6 +270,43 @@ input {
 .model-lab-toggle:focus-visible {
   opacity: 1;
   transform: translateY(-1px);
+  outline: none;
+}
+
+.idle-info-head--mobile {
+  display: block;
+}
+
+.mobile-underhood-toggle {
+  appearance: none;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.mobile-underhood-toggle-copy {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: var(--muted);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.mobile-underhood-toggle:hover .mobile-underhood-toggle-copy,
+.mobile-underhood-toggle:focus-visible .mobile-underhood-toggle-copy {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.mobile-underhood-toggle:focus-visible {
   outline: none;
 }
 
@@ -1132,7 +1173,7 @@ input {
   .brand-title {
     flex: 0 1 auto;
     min-width: 0;
-    font-size: clamp(3.1rem, 16.2vw, 5.45rem);
+    font-size: clamp(3.3rem, 17vw, 5.8rem);
   }
 
   .stage-panel {
@@ -1145,16 +1186,16 @@ input {
   }
 
   .repo-link {
-    flex: 0 0 44px;
-    width: 44px;
-    min-width: 44px;
-    height: 44px;
+    flex: 0 0 46px;
+    width: 46px;
+    min-width: 46px;
+    height: 46px;
     margin-top: 0;
   }
 
   .repo-icon {
-    width: 20px;
-    height: 20px;
+    width: 21px;
+    height: 21px;
   }
 
   .leaderboard-row {
@@ -1166,9 +1207,22 @@ input {
     padding-top: 12px;
   }
 
+  .idle-info--mobile {
+    gap: 10px;
+    padding-top: 10px;
+  }
+
+  .idle-info--collapsed {
+    gap: 0;
+  }
+
   .idle-info-head--split {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
+  }
+
+  .mobile-underhood-toggle {
+    gap: 10px;
   }
 
   .model-lab-toggle {

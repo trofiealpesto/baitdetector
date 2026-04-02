@@ -329,6 +329,7 @@ export default function App() {
   const [modelDetails, setModelDetails] = useState<ModelDetailResponse | null>(null);
   const [modelDetailsError, setModelDetailsError] = useState("");
   const [modelDetailsOpen, setModelDetailsOpen] = useState(false);
+  const [mobileUnderHoodOpen, setMobileUnderHoodOpen] = useState(false);
   const [modelLabDirection, setModelLabDirection] = useState(1);
   const [loadingModelDetails, setLoadingModelDetails] = useState(false);
   const [result, setResult] = useState<ScanResponse | null>(null);
@@ -395,6 +396,13 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (isNarrowViewport) {
+      setModelDetailsOpen(false);
+      setMobileUnderHoodOpen(false);
+    }
+  }, [isNarrowViewport]);
+
   useLayoutEffect(() => {
     const element = measureRef.current;
     if (!element) {
@@ -444,7 +452,7 @@ export default function App() {
       window.removeEventListener("resize", handleResize);
       observer?.disconnect();
     };
-  }, [uiStage, result, modelInfo, modelInfoError, fieldError, modelDetailsOpen, modelDetails, modelDetailsError, loadingModelDetails, isNarrowViewport]);
+  }, [uiStage, result, modelInfo, modelInfoError, fieldError, modelDetailsOpen, mobileUnderHoodOpen, modelDetails, modelDetailsError, loadingModelDetails, isNarrowViewport]);
   const visualState = toVisualState(result?.risk_band);
   const stageCopy = VISUAL_COPY[visualState];
   const reasons = result?.reasons.slice(0, 3) ?? [];
@@ -559,6 +567,17 @@ export default function App() {
     if (nextOpen) {
       void loadModelDetails();
     }
+  }
+
+  function toggleMobileUnderHood() {
+    const currentHeight = measureRef.current
+      ? Math.ceil(measureRef.current.getBoundingClientRect().height)
+      : shellHeight;
+    const nextOpen = !mobileUnderHoodOpen;
+    setHeightLockActive(true);
+    setShellHeight(currentHeight);
+    setModelLabDirection(nextOpen ? 1 : -1);
+    setMobileUnderHoodOpen(nextOpen);
   }
 
   function renderModelLab() {
@@ -737,6 +756,7 @@ export default function App() {
       setResult(null);
       setDraftUrl("");
       setFieldError("");
+      setMobileUnderHoodOpen(false);
     });
   }
 
@@ -816,15 +836,47 @@ export default function App() {
                       </form>
                     </div>
 
-                    <div className="idle-info">
-                      <div className="idle-info-head idle-info-head--split">
-                        <p className="panel-label">{modelDetailsOpen ? "model lab" : "under the hood"}</p>
-                        <button type="button" className="model-lab-toggle" onClick={toggleModelDetails}>
-                          {modelDetailsOpen ? "back to summary" : "open model lab"}
-                        </button>
-                      </div>
+                    <div
+                      className={`idle-info${isNarrowViewport ? " idle-info--mobile" : ""}${isNarrowViewport && !mobileUnderHoodOpen ? " idle-info--collapsed" : ""}`}
+                    >
+                      {isNarrowViewport ? (
+                        <div className="idle-info-head idle-info-head--mobile">
+                          <button
+                            type="button"
+                            className="mobile-underhood-toggle"
+                            aria-expanded={mobileUnderHoodOpen ? "true" : "false"}
+                            onClick={toggleMobileUnderHood}
+                          >
+                            <span className="panel-label">under the hood</span>
+                            <span className="mobile-underhood-toggle-copy">
+                              {mobileUnderHoodOpen ? "hide details" : "show details"}
+                            </span>
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="idle-info-head idle-info-head--split">
+                          <p className="panel-label">{modelDetailsOpen ? "model lab" : "under the hood"}</p>
+                          <button type="button" className="model-lab-toggle" onClick={toggleModelDetails}>
+                            {modelDetailsOpen ? "back to summary" : "open model lab"}
+                          </button>
+                        </div>
+                      )}
                       <AnimatePresence mode="wait" initial={false} custom={modelLabDirection}>
-                        {modelDetailsOpen ? (
+                        {isNarrowViewport ? (
+                          mobileUnderHoodOpen ? (
+                            <motion.div
+                              key="mobile-under-the-hood"
+                              className="idle-detail-panel"
+                              custom={modelLabDirection}
+                              variants={MODEL_LAB_VARIANTS}
+                              initial="enter"
+                              animate="center"
+                              exit="exit"
+                            >
+                              {renderUnderTheHood()}
+                            </motion.div>
+                          ) : null
+                        ) : modelDetailsOpen ? (
                           <motion.div
                             key="model-lab"
                             className="idle-detail-panel"

@@ -1121,7 +1121,7 @@ input {
     align-items: flex-start;
     width: fit-content;
     max-width: 100%;
-    gap: 4px;
+    gap: 2px;
   }
 
   .left-column {
@@ -1131,7 +1131,7 @@ input {
   .brand-title {
     flex: 0 1 auto;
     min-width: 0;
-    font-size: clamp(2.65rem, 14.2vw, 4.7rem);
+    font-size: clamp(2.9rem, 15.4vw, 5.15rem);
   }
 
   .stage-panel {
@@ -1144,16 +1144,16 @@ input {
   }
 
   .repo-link {
-    flex: 0 0 40px;
-    width: 40px;
-    min-width: 40px;
-    height: 40px;
-    margin-top: 1px;
+    flex: 0 0 42px;
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    margin-top: 0;
   }
 
   .repo-icon {
-    width: 18px;
-    height: 18px;
+    width: 19px;
+    height: 19px;
   }
 
   .leaderboard-row {
@@ -1316,11 +1316,26 @@ input {
     border-radius: 18px;
   }
 
+  .underhood-grid .model-card {
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 20px;
+  }
+
+  .underhood-grid .section-header {
+    gap: 6px;
+  }
+
   .info-row,
   .signal-item,
   .context-item {
     gap: 10px;
     padding: 8px 0;
+  }
+
+  .underhood-grid .info-row {
+    gap: 12px;
+    padding: 10px 0;
   }
 
   .info-key,
@@ -1330,11 +1345,21 @@ input {
     line-height: 1.45;
   }
 
+  .underhood-grid .info-key {
+    font-size: 11px;
+    line-height: 1.55;
+  }
+
   .info-value,
   .signal-name,
   .context-copy {
     font-size: 13px;
     line-height: 1.4;
+  }
+
+  .underhood-grid .info-value {
+    font-size: 15px;
+    line-height: 1.45;
   }
 
   .info-value {
@@ -1347,8 +1372,16 @@ input {
     gap: 8px;
   }
 
+  .underhood-grid .threshold-track {
+    height: 12px;
+  }
+
   .threshold-meta {
     font-size: 10px;
+  }
+
+  .underhood-grid .threshold-meta {
+    font-size: 11px;
   }
 
   .panel-title {

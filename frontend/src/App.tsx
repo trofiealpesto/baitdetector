@@ -563,10 +563,10 @@ export default function App() {
 
   function renderModelLab() {
     const heatmap = featureCorrelation as FeatureCorrelation | null;
-    const compactHeatmap = heatmap ? buildCorrelationFocus(heatmap, isNarrowViewport ? 6 : 8, isNarrowViewport ? 3 : 4) : null;
+    const compactHeatmap = heatmap ? buildCorrelationFocus(heatmap, isNarrowViewport ? 5 : 8, isNarrowViewport ? 2 : 4) : null;
     const heatmapColumns = compactHeatmap?.features.length ?? 0;
-    const heatmapLabelWidth = isNarrowViewport ? 84 : 108;
-    const heatmapCellSize = isNarrowViewport ? 26 : 32;
+    const heatmapLabelWidth = isNarrowViewport ? 72 : 108;
+    const heatmapCellSize = isNarrowViewport ? 22 : 32;
     const heatmapGridStyle =
       heatmapColumns > 0
         ? { gridTemplateColumns: `minmax(${heatmapLabelWidth}px, ${heatmapLabelWidth}px) repeat(${heatmapColumns}, minmax(${heatmapCellSize}px, ${heatmapCellSize}px))` }

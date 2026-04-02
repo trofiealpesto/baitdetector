@@ -68,9 +68,9 @@ input {
   min-height: calc(100dvh - 48px);
   margin: 0 auto;
   display: grid;
-  align-items: start;
-  padding-top: clamp(24px, 6vh, 72px);
-  padding-bottom: 40px;
+  justify-items: start;
+  align-items: center;
+  padding-block: clamp(16px, 3.5vh, 36px);
 }
 
 .left-column {
@@ -78,6 +78,7 @@ input {
   display: grid;
   gap: 24px;
   align-content: start;
+  justify-self: start;
   will-change: transform;
 }
 
@@ -1072,6 +1073,7 @@ input {
 
   .app-grid {
     min-height: calc(100dvh - 40px);
+    align-items: start;
     padding-top: clamp(18px, 5vh, 40px);
     padding-bottom: 28px;
   }
@@ -1099,88 +1101,122 @@ input {
 }
 
 @media (max-width: 640px) {
+  .app-shell {
+    padding-top: max(12px, env(safe-area-inset-top));
+    padding-right: 12px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+    padding-left: 12px;
+  }
+
+  .app-grid {
+    min-height: calc(100dvh - max(12px, env(safe-area-inset-top)) - max(16px, env(safe-area-inset-bottom)) - 24px);
+    gap: 0;
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+
   .title-row {
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
     width: fit-content;
     max-width: 100%;
-    gap: 8px;
+    gap: 6px;
   }
 
   .left-column {
-    gap: 14px;
+    gap: 12px;
   }
 
   .brand-title {
     flex: 0 1 auto;
     min-width: 0;
-    font-size: clamp(2.7rem, 14vw, 4.8rem);
+    font-size: clamp(2.45rem, 13vw, 4.35rem);
   }
 
   .stage-panel {
-    padding: 18px;
+    padding: 16px 14px 18px;
+    gap: 12px;
+  }
+
+  .stage-panel--idle {
+    gap: 14px;
   }
 
   .repo-link {
-    flex: 0 0 40px;
-    width: 40px;
-    min-width: 40px;
-    height: 40px;
-    margin-top: 2px;
+    flex: 0 0 38px;
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    margin-top: 1px;
   }
 
   .repo-icon {
-    width: 18px;
-    height: 18px;
+    width: 17px;
+    height: 17px;
   }
 
-  .idle-info-head--split,
   .leaderboard-row {
     grid-template-columns: 1fr;
   }
 
-  .model-lab-panel {
+  .idle-info {
     gap: 12px;
+    padding-top: 14px;
+  }
+
+  .idle-info-head--split {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .model-lab-toggle {
+    justify-self: end;
+  }
+
+  .model-lab-panel {
+    gap: 10px;
   }
 
   .model-lab-copy {
-    font-size: 12px;
-    line-height: 1.5;
+    font-size: 11px;
+    line-height: 1.45;
   }
 
   .lab-compact-layout {
-    gap: 8px;
+    gap: 6px;
   }
 
   .lab-compact-card {
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: 18px;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 16px;
   }
 
   .lab-compact-card--matrix {
-    width: 100%;
+    width: fit-content;
+    max-width: 100%;
+    justify-self: start;
   }
 
   .correlation-legend {
-    grid-template-columns: auto 64px auto;
+    grid-template-columns: auto 54px auto;
     gap: 3px;
     font-size: 8px;
   }
 
   .correlation-legend-bar {
-    width: 64px;
-    height: 7px;
+    width: 54px;
+    height: 6px;
   }
 
   .compact-correlation-grid {
-    gap: 3px;
+    gap: 2px;
   }
 
   .compact-correlation-corner,
   .compact-correlation-col {
-    min-height: 54px;
+    min-height: 44px;
   }
 
   .compact-correlation-corner {
@@ -1189,46 +1225,46 @@ input {
 
   .compact-correlation-col {
     padding-bottom: 0;
-    font-size: 7px;
+    font-size: 6px;
   }
 
   .compact-correlation-row {
-    min-height: 26px;
-    padding-right: 4px;
-    font-size: 7px;
+    min-height: 22px;
+    padding-right: 3px;
+    font-size: 6px;
   }
 
   .compact-correlation-cell {
-    width: 26px;
-    min-width: 26px;
-    height: 26px;
-    border-radius: 7px;
-    font-size: 7px;
+    width: 22px;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    font-size: 6px;
   }
 
   .lab-stat-list,
   .lab-pair-list {
-    gap: 8px;
+    gap: 6px;
   }
 
   .lab-stat-item {
-    padding-top: 8px;
+    padding-top: 6px;
   }
 
   .lab-pair-item {
-    padding-top: 8px;
+    padding-top: 6px;
   }
 
   .lab-stat-key,
   .lab-pair-caption,
   .lab-pair-value {
-    font-size: 10px;
+    font-size: 9px;
   }
 
   .lab-stat-value,
   .lab-pair-title {
-    font-size: 13px;
-    line-height: 1.35;
+    font-size: 12px;
+    line-height: 1.3;
   }
 
   .correlation-meta {
@@ -1242,12 +1278,70 @@ input {
   .scan-bar {
     flex-direction: column;
     align-items: stretch;
+    gap: 6px;
+    padding: 6px;
     border-radius: 30px;
+  }
+
+  .scan-input {
+    padding: 10px 14px;
+    font-size: 15px;
   }
 
   .submit-button,
   .rerun-button {
     width: 100%;
+    padding: 10px 14px;
+  }
+
+  .section-header {
+    gap: 5px;
+  }
+
+  .underhood-grid,
+  .section-block {
+    gap: 10px;
+  }
+
+  .model-card {
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 18px;
+  }
+
+  .info-row,
+  .signal-item,
+  .context-item {
+    gap: 10px;
+    padding: 8px 0;
+  }
+
+  .info-key,
+  .signal-value,
+  .context-meta {
+    font-size: 10px;
+    line-height: 1.45;
+  }
+
+  .info-value,
+  .signal-name,
+  .context-copy {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .info-value {
+    min-width: 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
+  .threshold-viz {
+    gap: 8px;
+  }
+
+  .threshold-meta {
+    font-size: 10px;
   }
 
   .panel-title {

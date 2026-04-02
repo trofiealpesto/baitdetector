@@ -1184,7 +1184,7 @@ input {
   .brand-title {
     flex: 1 1 auto;
     min-width: 0;
-    font-size: clamp(2.92rem, 15.2vw, 5.1rem);
+    font-size: clamp(3.02rem, 15.9vw, 5.3rem);
   }
 
   .stage-panel {
@@ -1213,7 +1213,7 @@ input {
   }
 
   .background-video video {
-    object-position: 42% 50%;
+    object-position: 56% 50%;
   }
 
   .leaderboard-row {

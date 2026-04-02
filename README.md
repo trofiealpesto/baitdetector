@@ -2,6 +2,9 @@
 
 Phishing-first URL risk scanner with a local ML model and a repeatable ingest/train/promote pipeline.
 
+Live app:
+- `https://baitdetector.vercel.app`
+
 ## Why This Version Is Different
 BaitDetector started as a notebook exploration of phishing URL classification. This version turns that experiment into a real project shape:
 
@@ -89,6 +92,10 @@ make run
 ## Vercel Deployment
 Production is designed as two Vercel Hobby projects plus GitHub Actions.
 
+Public entrypoint:
+- `https://baitdetector.vercel.app`
+- The backend project `baitdetector-api.vercel.app` is an internal service target for the frontend rewrite, not the user-facing app URL.
+
 Runtime shape:
 - `baitdetector-api`: FastAPI backend deployed from the repo root with `index.py` and [`vercel.json`](vercel.json)
 - `baitdetector-web`: Vite SPA deployed from [`frontend/`](frontend/) with [`frontend/vercel.json`](frontend/vercel.json)
@@ -104,12 +111,14 @@ Recommended setup:
    - `BAITDETECTOR_DATA_DIR=/var/task/data`
    - `BAITDETECTOR_MODEL_DIR=/var/task/data/models/promoted`
 5. On `baitdetector-web`, leave API calls relative; the frontend rewrite proxies `/api/:path*` to `https://baitdetector-api.vercel.app/api/:path*`.
+6. Set the frontend project’s production alias to `https://baitdetector.vercel.app`.
 
 Notes:
 - `DATABASE_URL` values like `postgres://...` and `postgresql://...` are normalized to the `psycopg` SQLAlchemy driver automatically.
 - The backend Vercel function bundles `data/models/promoted/**`, `data/normalized/latest.parquet`, and `data/normalized/latest_manifest.json`.
 - The frontend now owns the background media asset through `frontend/public/media/background-loop.webm`.
 - The root `Dockerfile` is still kept for local/manual hosting, but Railway is no longer the primary deployment path.
+- For public links in docs, social posts, or the GitHub About section, use `https://baitdetector.vercel.app`.
 
 ## Public API
 `POST /api/scan`

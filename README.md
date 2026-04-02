@@ -5,20 +5,41 @@ Phishing-first URL risk scanner with a local ML model and a repeatable ingest/tr
 Live app:
 - `https://baitdetector.vercel.app`
 
+## At A Glance
+- Paste a URL and get a phishing probability, verdict, and risk band in one shot
+- See which lexical signals pushed the score up or down
+- Inspect the currently promoted model snapshot directly in the UI
+- Backed by a repeatable open-data ingest, training, and promotion pipeline
+
+## What You Can Try
+- Check a login-looking URL and see whether the local model leans benign, suspicious, or phishing
+- Compare obvious benign domains against synthetic phishing-style domains
+- Open `under the hood` to inspect the shipped model snapshot, thresholds, and source freshness
+
+## What The App Actually Does
+- Scores one URL at a time and returns a phishing probability, verdict, risk band, reasons, and local threat-intel context
+- Explains which lexical and n-gram signals pushed the score up or down
+- Keeps scans local with no live enrichment calls against the scanned destination
+- Stores only minimal operational metrics by default; it does not persist raw scanned URLs
+
+## Freshness Note
+The `source freshness` values in the UI belong to the currently promoted model bundle, not simply the latest ingest run.
+
+That means:
+- a fresh ingest can succeed
+- a new candidate model can be trained
+- but if promotion is skipped by the benchmark gates, the live app continues serving the older promoted bundle
+
+In that case, the freshness dates stay tied to the last promoted model until a newer candidate actually clears promotion.
+
 ## Why This Version Is Different
 BaitDetector started as a notebook exploration of phishing URL classification. This version turns that experiment into a real project shape:
 
 - FastAPI backend with a React webapp and JSON API
 - Persisted model bundle with reusable preprocessing and explanation support
-- Scheduled ingest, train, and promote workflows
+- Scheduled ingest, train, and promote workflows with explicit promotion gates
 - Open-data-first sourcing from phishing feeds and benign-domain rankings
 - Lightweight model card and evaluation artifacts for a sponsor-friendly repo
-
-## What It Does
-- Scores one URL at a time and returns a phishing probability, verdict, risk band, reasons, and local threat-intel context
-- Explains which lexical and n-gram signals pushed the score up or down
-- Keeps scans local with no external enrichment calls in the current product version
-- Stores only minimal operational metrics by default; it does not persist raw scanned URLs
 
 ## Architecture
 ```mermaid

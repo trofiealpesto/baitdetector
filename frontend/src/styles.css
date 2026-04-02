@@ -1165,11 +1165,11 @@ input {
 
   .title-row {
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: flex-end;
     width: 100%;
     max-width: 100%;
-    gap: 10px;
+    gap: 6px;
   }
 
   .left-column {
@@ -1178,13 +1178,13 @@ input {
   }
 
   .left-column--mobile-centered {
-    transform: translateY(clamp(124px, 18vh, 192px));
+    transform: translateY(clamp(156px, 21vh, 228px));
   }
 
   .brand-title {
     flex: 1 1 auto;
     min-width: 0;
-    font-size: clamp(3.02rem, 15.9vw, 5.3rem);
+    font-size: clamp(3.14rem, 16.5vw, 5.45rem);
   }
 
   .stage-panel {
@@ -1202,7 +1202,7 @@ input {
     min-width: 38px;
     height: 38px;
     align-self: flex-end;
-    margin-left: 8px;
+    margin-left: 0;
     margin-top: 0;
     margin-bottom: 0;
   }
@@ -1213,7 +1213,7 @@ input {
   }
 
   .background-video video {
-    object-position: 56% 50%;
+    object-position: 64% 50%;
   }
 
   .leaderboard-row {

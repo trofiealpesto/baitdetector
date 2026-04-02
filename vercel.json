@@ -1,11 +1,3 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "functions": {
-    "index.py": {
-      "memory": 1024,
-      "maxDuration": 30,
-      "includeFiles": "{data/models/promoted/**,data/normalized/latest.parquet,data/normalized/latest_manifest.json}",
-      "excludeFiles": "{tests/**,dev/**,frontend/**,.github/**,data/raw/**,data/models/candidate/**}"
-    }
-  }
+  "$schema": "https://openapi.vercel.sh/vercel.json"
 }

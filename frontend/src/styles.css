@@ -1146,9 +1146,9 @@ input {
 @media (max-width: 640px) {
   .app-shell {
     padding-top: max(10px, env(safe-area-inset-top));
-    padding-right: 10px;
+    padding-right: max(14px, env(safe-area-inset-right));
     padding-bottom: max(14px, env(safe-area-inset-bottom));
-    padding-left: 10px;
+    padding-left: max(14px, env(safe-area-inset-left));
   }
 
   .app-grid {
@@ -1159,32 +1159,32 @@ input {
   }
 
   .app-grid--mobile-centered {
-    align-items: center;
-    padding-top: 0;
-    padding-bottom: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 
   .title-row {
     flex-direction: row;
     justify-content: flex-start;
-    align-items: flex-start;
-    width: fit-content;
+    align-items: flex-end;
+    width: 100%;
     max-width: 100%;
-    gap: 0;
+    gap: 4px;
   }
 
   .left-column {
     gap: 12px;
+    transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .left-column--mobile-centered {
-    align-content: center;
+    transform: translateY(clamp(72px, 12vh, 132px));
   }
 
   .brand-title {
     flex: 0 1 auto;
     min-width: 0;
-    font-size: clamp(3.3rem, 17vw, 5.8rem);
+    font-size: clamp(3.05rem, 15.8vw, 5.3rem);
   }
 
   .stage-panel {
@@ -1197,16 +1197,18 @@ input {
   }
 
   .repo-link {
-    flex: 0 0 46px;
-    width: 46px;
-    min-width: 46px;
-    height: 46px;
+    flex: 0 0 44px;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    align-self: flex-end;
     margin-top: 0;
+    margin-bottom: 5px;
   }
 
   .repo-icon {
-    width: 21px;
-    height: 21px;
+    width: 20px;
+    height: 20px;
   }
 
   .leaderboard-row {

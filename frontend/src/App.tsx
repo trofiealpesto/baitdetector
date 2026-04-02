@@ -464,12 +464,16 @@ export default function App() {
   const isMobileIdleCollapsed = isNarrowViewport && uiStage === "idle" && !mobileUnderHoodOpen;
   const suspiciousThreshold = asNumber(runtimeThresholds["suspicious"]) ?? 0.25;
   const phishingThreshold = asNumber(runtimeThresholds["phishing"]) ?? 0.45;
-  const freshnessRows = Object.entries(modelInfo?.source_freshness ?? {})
-    .slice(0, 4)
-    .map(([label, value]) => ({
-      label: label.replaceAll("_", " "),
-      value: formatShortDate(value),
-    }));
+  const pipelineRows = [
+    {
+      label: "last ingestion",
+      value: modelInfo ? formatShortDate(modelInfo.last_ingestion_at) : modelInfoError || "loading...",
+    },
+    {
+      label: "last training",
+      value: modelInfo ? formatShortDate(modelInfo.last_training_at) : modelInfoError || "loading...",
+    },
+  ];
   function renderUnderTheHood() {
     return (
       <div className="underhood-grid">
@@ -488,22 +492,15 @@ export default function App() {
             </div>
           </div>
           <div className="section-header">
-            <p className="panel-label">source freshness</p>
+            <p className="panel-label">latest pipeline</p>
           </div>
           <div className="info-list">
-            {freshnessRows.length > 0 ? (
-              freshnessRows.map((row) => (
-                <div className="info-row" key={row.label}>
-                  <span className="info-key">{row.label}</span>
-                  <span className="info-value">{row.value}</span>
-                </div>
-              ))
-            ) : (
-              <div className="info-row">
-                <span className="info-key">status</span>
-                <span className="info-value">{modelInfoError || "loading..."}</span>
+            {pipelineRows.map((row) => (
+              <div className="info-row" key={row.label}>
+                <span className="info-key">{row.label}</span>
+                <span className="info-value">{row.value}</span>
               </div>
-            )}
+            ))}
           </div>
         </section>
 

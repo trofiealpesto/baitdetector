@@ -41,7 +41,9 @@ class AnalyzerService:
         self.intel_service = IntelService(settings)
 
     def model_info(self) -> ModelInfoResponse:
-        return ModelInfoResponse(**self.bundle.model_info())
+        payload = self.bundle.model_info()
+        payload["last_ingestion_at"] = self._last_ingestion_at()
+        return ModelInfoResponse(**payload)
 
     def model_details(self) -> dict[str, object]:
         details = self.bundle.model_details()
@@ -132,3 +134,20 @@ class AnalyzerService:
         if probability >= medium_threshold:
             return "suspicious", "medium"
         return "benign", "low"
+
+    def _last_ingestion_at(self) -> str | None:
+        manifest_path = self.settings.data_dir / "normalized" / "latest_manifest.json"
+        if manifest_path.exists():
+            try:
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                manifest = None
+            if isinstance(manifest, dict):
+                fetched_at = manifest.get("fetched_at")
+                if fetched_at:
+                    return str(fetched_at)
+
+        latest_snapshot_path = self.settings.data_dir / "normalized" / "latest.parquet"
+        if latest_snapshot_path.exists():
+            return datetime.fromtimestamp(latest_snapshot_path.stat().st_mtime, timezone.utc).isoformat()
+        return None

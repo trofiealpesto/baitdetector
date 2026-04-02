@@ -33,10 +33,11 @@ export interface ModelInfoResponse {
   validation_window: Record<string, unknown>;
   benchmark_window: Record<string, unknown>;
   feature_set_version: string;
+  last_training_at?: string | null;
+  last_ingestion_at?: string | null;
   evaluation_mode: string;
   evaluation: Record<string, unknown>;
   runtime_thresholds: Record<string, unknown>;
-  source_freshness: Record<string, unknown>;
 }
 
 export interface ModelSignalWeight {

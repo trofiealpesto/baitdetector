@@ -46,10 +46,11 @@ class ModelInfoResponse(BaseModel):
     validation_window: dict[str, Any]
     benchmark_window: dict[str, Any]
     feature_set_version: str
+    last_training_at: str | None = None
+    last_ingestion_at: str | None = None
     evaluation_mode: str
     evaluation: dict[str, Any]
     runtime_thresholds: dict[str, Any]
-    source_freshness: dict[str, Any]
 
 
 class ModelSignalWeight(BaseModel):

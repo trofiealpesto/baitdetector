@@ -5,6 +5,8 @@ Phishing-first URL risk scanner with a local ML model and a repeatable ingest/tr
 Live app:
 - `https://baitdetector.vercel.app`
 
+This is a hobby project. The Vercel-hosted app is only a demo deployment; you can clone this repo and run the full stack locally with the bundled demo data and default SQLite setup.
+
 ## At A Glance
 - Paste a URL and get a phishing probability, verdict, and risk band in one shot
 - See which lexical signals pushed the score up or down
@@ -14,32 +16,13 @@ Live app:
 ## What You Can Try
 - Check a login-looking URL and see whether the local model leans benign, suspicious, or phishing
 - Compare obvious benign domains against synthetic phishing-style domains
-- Open `under the hood` to inspect the shipped model snapshot, thresholds, and source freshness
+- Open `under the hood` to inspect the shipped model snapshot, thresholds, and the latest ingest/train dates exposed by the app
 
 ## What The App Actually Does
 - Scores one URL at a time and returns a phishing probability, verdict, risk band, reasons, and local threat-intel context
 - Explains which lexical and n-gram signals pushed the score up or down
 - Keeps scans local with no live enrichment calls against the scanned destination
 - Stores only minimal operational metrics by default; it does not persist raw scanned URLs
-
-## Freshness Note
-The `source freshness` values in the UI belong to the currently promoted model bundle, not simply the latest ingest run.
-
-That means:
-- a fresh ingest can succeed
-- a new candidate model can be trained
-- but if promotion is skipped by the benchmark gates, the live app continues serving the older promoted bundle
-
-In that case, the freshness dates stay tied to the last promoted model until a newer candidate actually clears promotion.
-
-## Why This Version Is Different
-BaitDetector started as a notebook exploration of phishing URL classification. This version turns that experiment into a real project shape:
-
-- FastAPI backend with a React webapp and JSON API
-- Persisted model bundle with reusable preprocessing and explanation support
-- Scheduled ingest, train, and promote workflows with explicit promotion gates
-- Open-data-first sourcing from phishing feeds and benign-domain rankings
-- Lightweight model card and evaluation artifacts for a sponsor-friendly repo
 
 ## Architecture
 ```mermaid
@@ -110,38 +93,9 @@ make run
 
 `make dev` starts FastAPI and Vite together with reload. `make run` builds the frontend first, then serves it from FastAPI via Uvicorn at `http://127.0.0.1:8000`.
 
-## Vercel Deployment
-Production is designed as two Vercel Hobby projects plus GitHub Actions.
+## APIs That Can Be Served Externally
+If you run the FastAPI app locally or host it yourself, these are the same routes the web app calls.
 
-Public entrypoint:
-- `https://baitdetector.vercel.app`
-- The backend project `baitdetector-api.vercel.app` is an internal service target for the frontend rewrite, not the user-facing app URL.
-
-Runtime shape:
-- `baitdetector-api`: FastAPI backend deployed from the repo root with `index.py` and [`vercel.json`](vercel.json)
-- `baitdetector-web`: Vite SPA deployed from [`frontend/`](frontend/) with [`frontend/vercel.json`](frontend/vercel.json)
-- `model-data` branch: durable normalized snapshot history for the trainer
-- `main` branch: promoted runtime bundle under `data/models/promoted/`
-
-Recommended setup:
-1. Create a Neon free Postgres database.
-2. Create the `baitdetector-api` Vercel project from the repo root.
-3. Create the `baitdetector-web` Vercel project from the `frontend/` root directory.
-4. On `baitdetector-api`, set:
-   - `DATABASE_URL`
-   - `BAITDETECTOR_DATA_DIR=/var/task/data`
-   - `BAITDETECTOR_MODEL_DIR=/var/task/data/models/promoted`
-5. On `baitdetector-web`, leave API calls relative; the frontend rewrite proxies `/api/:path*` to `https://baitdetector-api.vercel.app/api/:path*`.
-6. Set the frontend project’s production alias to `https://baitdetector.vercel.app`.
-
-Notes:
-- `DATABASE_URL` values like `postgres://...` and `postgresql://...` are normalized to the `psycopg` SQLAlchemy driver automatically.
-- The backend Vercel function bundles `data/models/promoted/**`, `data/normalized/latest.parquet`, and `data/normalized/latest_manifest.json`.
-- The frontend now owns the background media asset through `frontend/public/media/background-loop.webm`.
-- The root `Dockerfile` is still kept for local/manual hosting, but Railway is no longer the primary deployment path.
-- For public links in docs, social posts, or the GitHub About section, use `https://baitdetector.vercel.app`.
-
-## Public API
 `POST /api/scan`
 
 Request:
@@ -161,13 +115,14 @@ Response shape:
   "reasons": [],
   "intel_hits": [],
   "model_version": "baitdetector-20260322T000000Z",
-  "scanned_at": "2026-03-22T00:00:00+00:00"
+  "scanned_at": "2026-03-22T00:00:00+00:00",
+  "deep_scan_status": "skipped"
 }
 ```
 
 `GET /api/model-info`
 
-Returns the current model version, model id/family, training and benchmark windows, runtime thresholds, source freshness, and evaluation summary.
+Returns the current model version, model id/family, training and benchmark windows, feature set, last training date, last ingestion date, runtime thresholds, and evaluation summary.
 
 ## Data Sources
 | Source | Role | Cadence | Notes |
@@ -212,7 +167,7 @@ If `training_summary.json` is missing at runtime, `/api/model-details` falls bac
 - Core lexical features include URL length, entropy, suspicious tokens, subdomain depth, punycode, raw IP hosts, redirect parameters, shortener detection, Tranco bucket, and local phishing-feed recency.
 - The weekly trainer compares exactly three linear challengers: baseline logistic regression, sparse L1 logistic regression, and SGD log-loss.
 - Runtime phishing and suspicious thresholds now come from the validation split and are stored in model metadata exactly as the API uses them.
-- The shipped artifact is still a bootstrap/demo model. Real quality depends on live ingest volume, source freshness, and benchmark discipline.
+- The shipped artifact is still a bootstrap/demo model. Real quality depends on live ingest volume, ingest cadence, and benchmark discipline.
 - The scanner is assistive security tooling, not a standalone allow/block control.
 - External enrichment is intentionally out of scope in the current version and reserved for a future update.
 

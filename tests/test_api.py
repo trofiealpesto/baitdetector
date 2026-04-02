@@ -13,6 +13,12 @@ from .support import build_test_settings, seed_promoted_bundle, write_demo_snaps
 def test_api_scan_and_model_info(tmp_path) -> None:
     settings = build_test_settings(tmp_path)
     seed_promoted_bundle(settings)
+    normalized_dir = settings.data_dir / "normalized"
+    normalized_dir.mkdir(parents=True, exist_ok=True)
+    (normalized_dir / "latest_manifest.json").write_text(
+        json.dumps({"fetched_at": "2026-03-24T09:30:00+00:00", "sources": {}, "total_rows": 60}),
+        encoding="utf-8",
+    )
     app = create_app(settings)
 
     with TestClient(app) as client:
@@ -26,6 +32,8 @@ def test_api_scan_and_model_info(tmp_path) -> None:
         assert model_payload["model_id"] == "logistic_baseline"
         assert model_payload["model_family"] == "logistic_regression"
         assert model_payload["evaluation_mode"] == "bootstrap_fallback"
+        assert model_payload["last_training_at"] == model_payload["training_window"]["end"]
+        assert model_payload["last_ingestion_at"] == "2026-03-24T09:30:00+00:00"
         assert model_payload["runtime_thresholds"] == {"suspicious": 0.02, "phishing": 0.08}
 
         payload = scan.json()

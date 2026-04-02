@@ -35,6 +35,8 @@ function buildModelInfo() {
       rows: 12,
     },
     feature_set_version: "features-v1",
+    last_training_at: "2026-03-23T12:00:00+00:00",
+    last_ingestion_at: "2026-03-24T09:30:00+00:00",
     evaluation_mode: "temporal_benchmark",
     evaluation: {
       pr_auc: 0.92,
@@ -49,9 +51,6 @@ function buildModelInfo() {
     runtime_thresholds: {
       suspicious: 0.19,
       phishing: 0.41,
-    },
-    source_freshness: {
-      demo: "2026-03-23T00:00:00+00:00",
     },
   };
 }
@@ -151,7 +150,9 @@ describe("App", () => {
     expect(document.querySelector('[data-ui-stage="idle"]')).toBeInTheDocument();
     expect(screen.getByText("under the hood")).toBeInTheDocument();
     expect(screen.getByText("decision bands")).toBeInTheDocument();
-    expect(screen.getByText("source freshness")).toBeInTheDocument();
+    expect(screen.getByText("latest pipeline")).toBeInTheDocument();
+    expect(screen.getByText("last ingestion")).toBeInTheDocument();
+    expect(screen.getByText("last training")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "open info" })).not.toBeInTheDocument();
   });
 

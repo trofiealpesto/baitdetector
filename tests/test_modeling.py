@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import pytest
+
 from baitdetector.features import FEATURE_SET_VERSION, build_lookup_context
 from baitdetector.modeling import CHALLENGER_SPECS, fit_bundle, resolve_runtime_thresholds
 from baitdetector.train import frame_window, split_frame
+from baitdetector.url_utils import redact_url_secrets
 
 from .support import normalized_demo_frame
 
@@ -71,3 +74,11 @@ def test_model_info_exposes_runtime_thresholds() -> None:
     assert info["latest_ingestion_sources"] == {}
     assert info["runtime_thresholds"] == {"suspicious": 0.02, "phishing": 0.08}
     assert resolve_runtime_thresholds(bundle.metadata) == {"suspicious": 0.02, "phishing": 0.08}
+
+
+def test_bundle_scores_secret_like_inputs_consistently() -> None:
+    bundle = _build_bundle()
+    raw_url = "https://compact.link/reset?mode=resetPassword&oobCode=UlNWwoLW0Nt5KimkaIVmA5WYa5gENFl3n2aBkBwEomsAAAGY5NMkHQ&apiKey=AIzaSyA1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q"
+    sanitized_url = redact_url_secrets(raw_url)
+
+    assert bundle.predict_proba_one(raw_url) == pytest.approx(bundle.predict_proba_one(sanitized_url))

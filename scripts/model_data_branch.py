@@ -11,6 +11,10 @@ from pathlib import Path
 
 ALLOWED_NORMALIZED_FILES = ("latest.parquet", "latest_manifest.json")
 SNAPSHOT_GLOB = "urls-*.parquet"
+BRANCH_GUARD_FILES = {
+    "vercel.json": '{\n  "$schema": "https://openapi.vercel.sh/vercel.json",\n  "ignoreCommand": "exit 0"\n}\n',
+    "frontend/vercel.json": '{\n  "$schema": "https://openapi.vercel.sh/vercel.json",\n  "ignoreCommand": "exit 0"\n}\n',
+}
 
 
 def run(command: list[str], *, cwd: Path) -> None:
@@ -70,6 +74,13 @@ def copy_normalized_history(source_dir: Path, target_dir: Path) -> None:
         shutil.copy2(snapshot_path, target_dir / snapshot_path.name)
 
 
+def write_branch_guard_files(worktree_root: Path) -> None:
+    for relative_path, content in BRANCH_GUARD_FILES.items():
+        target_path = worktree_root / relative_path
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        target_path.write_text(content, encoding="utf-8")
+
+
 @contextmanager
 def worktree_checkout(repo_root: Path, branch: str):
     with tempfile.TemporaryDirectory(prefix=f"{branch}-") as temp_dir_name:
@@ -117,6 +128,7 @@ def publish(repo_root: Path, branch: str, keep: int, commit_message: str) -> int
         target_dir = worktree_root / "data" / "normalized"
         copy_normalized_history(normalized_dir, target_dir)
         prune_snapshot_history(target_dir, keep)
+        write_branch_guard_files(worktree_root)
 
         run(["git", "add", "-A"], cwd=worktree_root)
         result = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=str(worktree_root), check=False)

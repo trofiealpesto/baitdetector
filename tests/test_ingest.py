@@ -36,3 +36,21 @@ def test_parse_tranco_fixture_and_normalize_rows() -> None:
     assert {"normalized_url", "registrable_domain", "label", "source"}.issubset(frame.columns)
     assert len(frame) == 5
 
+
+def test_normalize_rows_redacts_secret_like_query_values() -> None:
+    frame = normalize_rows(
+        [
+            {
+                "url": "https://compact.link/reset?mode=resetPassword&oobCode=UlNWwoLW0Nt5KimkaIVmA5WYa5gENFl3n2aBkBwEomsAAAGY5NMkHQ&apiKey=AIzaSyA1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q",
+                "label": 1,
+                "source": "phishtank",
+                "observed_at": "2026-04-03T00:00:00+00:00",
+                "tranco_rank": None,
+            }
+        ]
+    )
+
+    record = frame.iloc[0].to_dict()
+    assert "AIza" not in str(record["url"])
+    assert "AIza" not in str(record["normalized_url"])
+    assert "oobCode=redacted" in str(record["normalized_url"])

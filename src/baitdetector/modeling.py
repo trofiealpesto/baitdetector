@@ -15,6 +15,7 @@ from sklearn.linear_model import LogisticRegression, SGDClassifier
 from sklearn.pipeline import FeatureUnion, Pipeline
 
 from .features import FEATURE_LABELS, FEATURE_SET_VERSION, LexicalFeatureExtractor
+from .url_utils import redact_url_secrets
 
 SUSPICIOUS_SIGNAL_BONUSES = {
     "lexical__known_phishing_hit": 4.0,
@@ -47,6 +48,10 @@ SIGNAL_GROUP_LABELS = {
     "routing": "Routing",
     "trust": "Trust",
 }
+
+
+def _tfidf_preprocessor(value: str) -> str:
+    return redact_url_secrets(value).lower()
 
 
 @dataclass(frozen=True)
@@ -141,7 +146,8 @@ def build_pipeline(
                                 analyzer="char",
                                 ngram_range=(3, 5),
                                 max_features=700,
-                                lowercase=True,
+                                lowercase=False,
+                                preprocessor=_tfidf_preprocessor,
                             ),
                         ),
                     ]

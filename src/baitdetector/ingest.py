@@ -13,7 +13,7 @@ import pandas as pd
 import requests
 
 from .settings import get_settings
-from .url_utils import normalize_url
+from .url_utils import normalize_url, redact_url_secrets
 
 PHISHING_DATABASE_URL = "https://phish.co.za/latest/ALL-phishing-links.lst"
 PHISHTANK_URL = "https://data.phishtank.com/data/online-valid.json.bz2"
@@ -96,8 +96,8 @@ def normalize_rows(rows: list[dict[str, object]]) -> pd.DataFrame:
             continue
         normalized_rows.append(
             {
-                "url": row["url"],
-                "normalized_url": normalized.normalized_url,
+                "url": redact_url_secrets(str(row["url"])),
+                "normalized_url": redact_url_secrets(normalized.normalized_url),
                 "registrable_domain": normalized.registrable_domain,
                 "label": int(row["label"]),
                 "source": row["source"],
@@ -204,4 +204,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

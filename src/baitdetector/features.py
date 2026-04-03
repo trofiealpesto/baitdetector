@@ -9,7 +9,7 @@ from typing import Any
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 
-from .url_utils import NormalizedURL, normalize_url
+from .url_utils import NormalizedURL, normalize_url, redact_url_secrets
 
 FEATURE_SET_VERSION = "2026-03-22"
 
@@ -169,7 +169,7 @@ class LexicalFeatureExtractor(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X: Iterable[str]) -> np.ndarray:
-        rows = [self._feature_row(normalize_url(url)) for url in X]
+        rows = [self._feature_row(normalize_url(redact_url_secrets(url))) for url in X]
         return np.asarray(rows, dtype=float)
 
     def get_feature_names_out(self, input_features: Any = None) -> np.ndarray:

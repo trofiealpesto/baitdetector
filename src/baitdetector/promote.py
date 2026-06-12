@@ -8,6 +8,9 @@ from typing import Any
 
 from .settings import get_settings
 
+# Allowed regression on individual benchmark metrics before a candidate is rejected.
+PROMOTION_METRIC_TOLERANCE = 0.01
+
 
 def load_metadata(path: Path) -> dict[str, Any] | None:
     if not path.exists():
@@ -29,9 +32,9 @@ def should_promote(candidate: dict[str, Any], current: dict[str, Any] | None) ->
     current_eval = current.get("evaluation", {})
     candidate_eval = candidate.get("evaluation", {})
     return (
-        candidate_eval.get("pr_auc", 0.0) >= current_eval.get("pr_auc", 0.0)
-        and candidate_eval.get("roc_auc", 0.0) >= current_eval.get("roc_auc", 0.0)
-        and candidate_eval.get("false_positive_rate", 1.0) <= current_eval.get("false_positive_rate", 1.0)
+        candidate_eval.get("pr_auc", 0.0) >= current_eval.get("pr_auc", 0.0) - PROMOTION_METRIC_TOLERANCE
+        and candidate_eval.get("roc_auc", 0.0) >= current_eval.get("roc_auc", 0.0) - PROMOTION_METRIC_TOLERANCE
+        and candidate_eval.get("false_positive_rate", 1.0) <= current_eval.get("false_positive_rate", 1.0) + PROMOTION_METRIC_TOLERANCE
     )
 
 

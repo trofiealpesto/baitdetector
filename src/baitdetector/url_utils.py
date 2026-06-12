@@ -16,7 +16,10 @@ _SCHEME_LIKE_MISSING_SEPARATOR = re.compile(r"^[a-zA-Z][a-zA-Z0-9+.-]*//")
 _REDACTED_VALUE = "redacted"
 _GOOGLE_API_KEY = re.compile(r"AIza[0-9A-Za-z\-_]{35}")
 _TELEGRAM_BOT_TOKEN = re.compile(r"\b\d{6,12}:[A-Za-z0-9_-]{20,}\b")
+_AWS_ACCESS_KEY_ID = re.compile(r"(?:A3T[A-Z0-9]|AKIA|ASIA|ABIA|ACCA)[0-9A-Z]{16}")
+_AWS_SECRET_KEY = re.compile(r"[A-Za-z0-9/+=]{40,}")
 _OPAQUE_TOKEN = re.compile(r"^(?=.{24,}$)(?=.*[A-Za-z])(?=.*\d)[A-Za-z0-9_-]+$")
+_EMBEDDED_OPAQUE_TOKEN = re.compile(r"[A-Za-z0-9_-]{24,}")
 _SENSITIVE_QUERY_KEYS = {
     "accesstoken",
     "apikey",
@@ -93,28 +96,45 @@ def _canonical_query_key(key: str) -> str:
     return re.sub(r"[^a-z0-9]", "", key.lower())
 
 
-def _matches_secret_pattern(value: str) -> bool:
-    decoded = unquote(value)
-    return any(pattern.search(candidate) for pattern in (_GOOGLE_API_KEY, _TELEGRAM_BOT_TOKEN) for candidate in (value, decoded))
-
-
 def _looks_like_opaque_token(value: str) -> bool:
     decoded = unquote(value)
     return bool(_OPAQUE_TOKEN.fullmatch(decoded))
 
 
+def _contains_letters_and_digits(value: str) -> bool:
+    return any(char.isalpha() for char in value) and any(char.isdigit() for char in value)
+
+
+def _redact_embedded_secrets(text: str) -> str:
+    for pattern in (_GOOGLE_API_KEY, _TELEGRAM_BOT_TOKEN, _AWS_ACCESS_KEY_ID):
+        text = pattern.sub(_REDACTED_VALUE, text)
+    for pattern in (_AWS_SECRET_KEY, _EMBEDDED_OPAQUE_TOKEN):
+        text = pattern.sub(
+            lambda match: _REDACTED_VALUE if _contains_letters_and_digits(match.group()) else match.group(),
+            text,
+        )
+    return text
+
+
+def _sanitize_component(value: str) -> str:
+    if not value:
+        return value
+    if _looks_like_opaque_token(value):
+        return _REDACTED_VALUE
+    sanitized = _redact_embedded_secrets(value)
+    if sanitized != value:
+        return sanitized
+    decoded = unquote(value)
+    if decoded != value and _redact_embedded_secrets(decoded) != decoded:
+        # Secret only visible after percent-decoding; spans cannot be mapped back safely.
+        return _REDACTED_VALUE
+    return value
+
+
 def _sanitize_path(path: str) -> str:
     if not path:
         return path
-
-    segments = []
-    for segment in path.split("/"):
-        decoded = unquote(segment)
-        if decoded and (_matches_secret_pattern(decoded) or _looks_like_opaque_token(decoded)):
-            segments.append(_REDACTED_VALUE)
-        else:
-            segments.append(segment)
-    return "/".join(segments)
+    return "/".join(_sanitize_component(segment) for segment in path.split("/"))
 
 
 def _sanitize_query(query: str) -> str:
@@ -124,10 +144,10 @@ def _sanitize_query(query: str) -> str:
     sanitized_pairs = []
     for key, value in parse_qsl(query, keep_blank_values=True):
         canonical_key = _canonical_query_key(key)
-        if canonical_key in _SENSITIVE_QUERY_KEYS or _matches_secret_pattern(value) or _looks_like_opaque_token(value):
+        if canonical_key in _SENSITIVE_QUERY_KEYS:
             sanitized_pairs.append((key, _REDACTED_VALUE))
         else:
-            sanitized_pairs.append((key, value))
+            sanitized_pairs.append((_sanitize_component(key), _sanitize_component(value)))
     return urlencode(sanitized_pairs, doseq=True)
 
 
@@ -147,7 +167,7 @@ def redact_url_secrets(url: str) -> str:
     netloc = host if not parsed.port else f"{host}:{parsed.port}"
     path = _sanitize_path(parsed.path)
     query = _sanitize_query(parsed.query)
-    fragment = _REDACTED_VALUE if parsed.fragment and (_matches_secret_pattern(parsed.fragment) or _looks_like_opaque_token(parsed.fragment)) else parsed.fragment
+    fragment = _sanitize_component(parsed.fragment)
     return urlunsplit((parsed.scheme.lower(), netloc, path, query, fragment))
 
 

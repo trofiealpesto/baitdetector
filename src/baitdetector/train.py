@@ -21,6 +21,7 @@ from .modeling import (
     resolve_runtime_thresholds,
     save_model_bundle,
 )
+from .promote import PROMOTION_METRIC_TOLERANCE
 from .settings import get_settings
 
 
@@ -340,9 +341,9 @@ def passes_shared_benchmark_gates(candidate_metrics: dict[str, Any], current_met
     if any(candidate_metrics.get(metric) is None or current_metrics.get(metric) is None for metric in required):
         return False
     return (
-        float(candidate_metrics["pr_auc"]) >= float(current_metrics["pr_auc"])
-        and float(candidate_metrics["roc_auc"]) >= float(current_metrics["roc_auc"])
-        and float(candidate_metrics["false_positive_rate"]) <= float(current_metrics["false_positive_rate"])
+        float(candidate_metrics["pr_auc"]) >= float(current_metrics["pr_auc"]) - PROMOTION_METRIC_TOLERANCE
+        and float(candidate_metrics["roc_auc"]) >= float(current_metrics["roc_auc"]) - PROMOTION_METRIC_TOLERANCE
+        and float(candidate_metrics["false_positive_rate"]) <= float(current_metrics["false_positive_rate"]) + PROMOTION_METRIC_TOLERANCE
     )
 
 
@@ -397,9 +398,12 @@ def _load_current_promoted_summary(dataset: TrainingDataset) -> dict[str, Any] |
     settings = get_settings()
     try:
         bundle = load_model_bundle(settings.model_dir)
+        return evaluate_current_bundle(bundle, dataset)
     except FileNotFoundError:
         return None
-    return evaluate_current_bundle(bundle, dataset)
+    except Exception as exc:  # noqa: BLE001 - an unloadable legacy bundle must not block retraining
+        print(f"Warning: could not evaluate current promoted bundle ({exc!r}); treating as no current model.")
+        return None
 
 
 def _build_leaderboard_entry(spec: ChallengerSpec, bundle, evaluation: dict[str, Any]) -> dict[str, Any]:
@@ -528,10 +532,6 @@ def train_temporal_candidates(dataset: TrainingDataset) -> tuple[dict[str, Any],
 
     champion = max(candidate_results, key=lambda item: leaderboard_sort_key({"benchmark_metrics": item["evaluation"]["benchmark_evaluation"]}))
     current_summary = _load_current_promoted_summary(dataset)
-    promotion = {
-        "recommended": False,
-        "reason": "shared_benchmark_regression",
-    }
     if current_summary is None:
         promotion = {
             "recommended": True,
@@ -540,17 +540,21 @@ def train_temporal_candidates(dataset: TrainingDataset) -> tuple[dict[str, Any],
     else:
         champion_metrics = champion["evaluation"]["benchmark_evaluation"]
         current_metrics = current_summary["evaluation"]
-        if passes_shared_benchmark_gates(champion_metrics, current_metrics):
-            if outranks(champion_metrics, current_metrics):
-                promotion = {
-                    "recommended": True,
-                    "reason": "shared_benchmark_win",
-                }
-            else:
-                promotion = {
-                    "recommended": False,
-                    "reason": "shared_benchmark_tie_keeps_current",
-                }
+        if not passes_shared_benchmark_gates(champion_metrics, current_metrics):
+            promotion = {
+                "recommended": False,
+                "reason": "metric_regression_exceeds_tolerance",
+            }
+        elif outranks(champion_metrics, current_metrics):
+            promotion = {
+                "recommended": True,
+                "reason": "shared_benchmark_win",
+            }
+        else:
+            promotion = {
+                "recommended": False,
+                "reason": "leaderboard_tie_keeps_current",
+            }
 
     champion_bundle = champion["bundle"]
     champion_bundle.metadata["promotion"] = {

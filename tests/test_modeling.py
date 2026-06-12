@@ -76,9 +76,34 @@ def test_model_info_exposes_runtime_thresholds() -> None:
     assert resolve_runtime_thresholds(bundle.metadata) == {"suspicious": 0.02, "phishing": 0.08}
 
 
+def test_fit_bundle_applies_calibration_with_enough_rows() -> None:
+    frame = normalized_demo_frame()
+    train_frame, validation_frame = split_frame(frame)
+    tranco_ranks, malicious_last_seen = build_lookup_context(train_frame.to_dict(orient="records"))
+    spec = CHALLENGER_SPECS[0]
+
+    calibration_urls = (validation_frame["normalized_url"].tolist() * 5)[:60]
+    calibration_labels = (validation_frame["label"].astype(int).tolist() * 5)[:60]
+
+    bundle = fit_bundle(
+        train_urls=train_frame["normalized_url"].tolist(),
+        train_labels=train_frame["label"].astype(int).tolist(),
+        tranco_ranks=tranco_ranks,
+        malicious_last_seen=malicious_last_seen,
+        metadata={"model_version": "test-calibrated", "training_window": frame_window(train_frame)},
+        classifier=spec.build_classifier(),
+        calibration_urls=calibration_urls,
+        calibration_labels=calibration_labels,
+    )
+
+    assert bundle.metadata["calibration"]["status"] == "applied"
+    probability = bundle.predict_proba_one("https://example.com/login")
+    assert 0.0 <= probability <= 1.0
+
+
 def test_bundle_scores_secret_like_inputs_consistently() -> None:
     bundle = _build_bundle()
-    raw_url = "https://compact.link/reset?mode=resetPassword&oobCode=UlNWwoLW0Nt5KimkaIVmA5WYa5gENFl3n2aBkBwEomsAAAGY5NMkHQ&apiKey=AIzaSyA1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q"
+    raw_url = "https://compact.link/reset?mode=resetPassword&oobCode=UlNWwoLW0Nt5KimkaIVmA5WYa5gENFl3n2aBkBwEomsAAAGY5NMkHQ&apiKey=AIzaFAKEFAKEFAKEFAKEFAKEFAKEFAKEFAKE000"
     sanitized_url = redact_url_secrets(raw_url)
 
     assert bundle.predict_proba_one(raw_url) == pytest.approx(bundle.predict_proba_one(sanitized_url))

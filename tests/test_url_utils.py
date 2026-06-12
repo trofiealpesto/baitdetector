@@ -28,7 +28,7 @@ def test_normalize_rejects_unsupported_scheme() -> None:
 def test_redact_url_secrets_masks_path_and_query_tokens() -> None:
     raw_url = (
         "https://example.com/123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
-        "?apiKey=AIzaSyA1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q"
+        "?apiKey=AIzaFAKEFAKEFAKEFAKEFAKEFAKEFAKEFAKE000"
         "&oobCode=UlNWwoLW0Nt5KimkaIVmA5WYa5gENFl3n2aBkBwEomsAAAGY5NMkHQ"
     )
 
@@ -38,6 +38,46 @@ def test_redact_url_secrets_masks_path_and_query_tokens() -> None:
     assert "123456789:" not in sanitized
     assert "apiKey=redacted" in sanitized
     assert "oobCode=redacted" in sanitized
+
+
+def test_redact_url_secrets_masks_tokens_embedded_in_longer_path_segments() -> None:
+    raw_url = "https://example.com/cgi-bin/verify-BXp1qah7kgedu6zw8wn5zipp9-step/next?page=1"
+
+    sanitized = redact_url_secrets(raw_url)
+
+    assert "BXp1qah7kgedu6zw8wn5zipp9" not in sanitized
+    assert sanitized.startswith("https://example.com/cgi-bin/")
+    assert sanitized.endswith("/next?page=1")
+
+
+def test_redact_url_secrets_masks_tokens_embedded_in_query_keys() -> None:
+    raw_url = "http://162.241.87.196/landing/?ouEU54qKb7zLwWBeRzoX7nY1m%2F%7Bemail%7D3COKPKoDFAKEFAKECXue7zh0eC="
+
+    sanitized = redact_url_secrets(raw_url)
+
+    assert "ouEU54qKb7zLwWBeRzoX7nY1m" not in sanitized
+    assert "3COKPKoDFAKEFAKECXue7zh0eC" not in sanitized
+
+
+def test_redact_url_secrets_masks_aws_key_pair() -> None:
+    raw_url = (
+        "https://example.com/upload?aws_id=AKIAIOSFODNN7EXAMPLE"
+        "&blob=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    )
+
+    sanitized = redact_url_secrets(raw_url)
+
+    assert "AKIA" not in sanitized
+    assert "wJalrXUtnFEMI" not in sanitized
+
+
+def test_redact_url_secrets_masks_telegram_token_secret_part_in_bot_path() -> None:
+    raw_url = "https://api.telegram.org/bot123456789:AAEhBOweik6ad9rQXMENQjcrGbqCr4d09w/sendMessage"
+
+    sanitized = redact_url_secrets(raw_url)
+
+    assert "AAEhBOweik6ad9rQXMENQjcrGbqCr4d09w" not in sanitized
+    assert sanitized.endswith("/sendMessage")
 
 
 @pytest.mark.parametrize(

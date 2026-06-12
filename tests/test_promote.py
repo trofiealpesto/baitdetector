@@ -76,6 +76,38 @@ def test_promote_skips_shared_benchmark_regression(tmp_path, monkeypatch) -> Non
     assert promote_module.promote() is False
 
 
+def test_promote_metadata_fallback_allows_small_regression(tmp_path, monkeypatch) -> None:
+    settings = build_test_settings(tmp_path)
+    _write_candidate_artifacts(
+        settings,
+        {
+            "model_version": "candidate-model",
+            "evaluation_mode": "temporal_benchmark",
+            "evaluation": {"pr_auc": 0.795, "roc_auc": 0.795, "false_positive_rate": 0.105},
+        },
+        include_current=True,
+    )
+
+    monkeypatch.setattr(promote_module, "get_settings", lambda: settings)
+    assert promote_module.promote() is True
+
+
+def test_promote_metadata_fallback_rejects_regression_beyond_tolerance(tmp_path, monkeypatch) -> None:
+    settings = build_test_settings(tmp_path)
+    _write_candidate_artifacts(
+        settings,
+        {
+            "model_version": "candidate-model",
+            "evaluation_mode": "temporal_benchmark",
+            "evaluation": {"pr_auc": 0.75, "roc_auc": 0.795, "false_positive_rate": 0.105},
+        },
+        include_current=True,
+    )
+
+    monkeypatch.setattr(promote_module, "get_settings", lambda: settings)
+    assert promote_module.promote() is False
+
+
 def test_promote_skips_bootstrap_fallback_candidate(tmp_path, monkeypatch) -> None:
     settings = build_test_settings(tmp_path)
     _write_candidate_artifacts(

@@ -11,6 +11,7 @@ from scipy import sparse
 from sklearn.base import clone
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.frozen import FrozenEstimator
 from sklearn.linear_model import LogisticRegression, SGDClassifier
 from sklearn.pipeline import FeatureUnion, Pipeline
 
@@ -89,7 +90,7 @@ CHALLENGER_SPECS: tuple[ChallengerSpec, ...] = (
             "max_iter": 2_000,
             "class_weight": "balanced",
             "solver": "liblinear",
-            "penalty": "l1",
+            "l1_ratio": 1.0,
             "C": 1.0,
         },
     ),
@@ -475,21 +476,22 @@ def fit_bundle(
 
     if calibration_urls and calibration_labels and len(calibration_urls) >= MIN_CALIBRATION_ROWS and len(set(calibration_labels)) > 1:
         try:
-            calibrated_estimator = CalibratedClassifierCV(
-                estimator=explainer_model,
+            calibrator = CalibratedClassifierCV(
+                FrozenEstimator(explainer_model),
                 method="sigmoid",
-                cv="prefit",
             )
-            calibrated_estimator.fit(calibration_urls, calibration_labels)
-            metadata["calibration"] = {
-                "status": "applied",
-                "method": "sigmoid",
-                "rows": int(len(calibration_urls)),
-            }
+            calibrator.fit(calibration_urls, calibration_labels)
         except ValueError as exc:
             metadata["calibration"] = {
                 "status": "skipped",
                 "reason": str(exc),
+                "rows": int(len(calibration_urls)),
+            }
+        else:
+            calibrated_estimator = calibrator
+            metadata["calibration"] = {
+                "status": "applied",
+                "method": "sigmoid",
                 "rows": int(len(calibration_urls)),
             }
     elif calibration_urls and calibration_labels:

@@ -61,6 +61,14 @@ def clear_worktree(worktree_root: Path) -> None:
             path.unlink()
 
 
+def merge_missing_snapshots(source_dir: Path, target_dir: Path) -> None:
+    target_dir.mkdir(parents=True, exist_ok=True)
+    for snapshot_path in sorted(source_dir.glob(SNAPSHOT_GLOB)):
+        target_path = target_dir / snapshot_path.name
+        if not target_path.exists():
+            shutil.copy2(snapshot_path, target_path)
+
+
 def copy_normalized_history(source_dir: Path, target_dir: Path) -> None:
     target_dir.mkdir(parents=True, exist_ok=True)
     clear_normalized_dir(target_dir)
@@ -79,6 +87,36 @@ def write_branch_guard_files(worktree_root: Path) -> None:
         target_path = worktree_root / relative_path
         target_path.parent.mkdir(parents=True, exist_ok=True)
         target_path.write_text(content, encoding="utf-8")
+
+
+@contextmanager
+def orphan_worktree(repo_root: Path, branch: str):
+    """Empty worktree on a throwaway orphan branch, for single-commit publishing."""
+    work_branch = f"{branch}-publish-tmp"
+    with tempfile.TemporaryDirectory(prefix=f"{branch}-") as temp_dir_name:
+        temp_dir = Path(temp_dir_name)
+        run(["git", "worktree", "add", "--force", "--detach", str(temp_dir)], cwd=repo_root)
+        try:
+            subprocess.run(
+                ["git", "branch", "-D", work_branch],
+                cwd=str(repo_root),
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            )
+            run(["git", "checkout", "--orphan", work_branch], cwd=temp_dir)
+            run(["git", "rm", "-rf", "--ignore-unmatch", "."], cwd=temp_dir)
+            clear_worktree(temp_dir)
+            yield temp_dir
+        finally:
+            run(["git", "worktree", "remove", "--force", str(temp_dir)], cwd=repo_root)
+            subprocess.run(
+                ["git", "branch", "-D", work_branch],
+                cwd=str(repo_root),
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            )
 
 
 @contextmanager
@@ -118,13 +156,23 @@ def hydrate(repo_root: Path, branch: str) -> int:
 
 def publish(repo_root: Path, branch: str, keep: int, commit_message: str) -> int:
     normalized_dir = ensure_normalized_dir(repo_root)
+
+    # Union the branch's existing snapshots into the local history so a publish
+    # from a fresh checkout never erases previously accumulated snapshots.
+    if remote_branch_exists(repo_root, branch):
+        with worktree_checkout(repo_root, branch) as worktree_root:
+            source_dir = worktree_root / "data" / "normalized"
+            if source_dir.exists():
+                merge_missing_snapshots(source_dir, normalized_dir)
+
     snapshot_paths = prune_snapshot_history(normalized_dir, keep)
     if not snapshot_paths and not any((normalized_dir / name).exists() for name in ALLOWED_NORMALIZED_FILES):
         print("No normalized history found to publish.")
         return 0
 
-    with worktree_checkout(repo_root, branch) as worktree_root:
-        clear_worktree(worktree_root)
+    # Publish as a single orphan commit and force-push: the branch is derived
+    # data, and keeping history would accumulate stale snapshot blobs forever.
+    with orphan_worktree(repo_root, branch) as worktree_root:
         target_dir = worktree_root / "data" / "normalized"
         copy_normalized_history(normalized_dir, target_dir)
         prune_snapshot_history(target_dir, keep)
@@ -137,8 +185,8 @@ def publish(repo_root: Path, branch: str, keep: int, commit_message: str) -> int
             return 0
 
         run(["git", "commit", "-m", commit_message], cwd=worktree_root)
-        run(["git", "push", "origin", branch], cwd=worktree_root)
-    print(f"Published normalized history to '{branch}'.")
+        run(["git", "push", "--force", "origin", f"HEAD:refs/heads/{branch}"], cwd=worktree_root)
+    print(f"Published normalized history to '{branch}' as a single commit.")
     return 0
 
 

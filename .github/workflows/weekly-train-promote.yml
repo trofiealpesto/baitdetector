@@ -49,7 +49,12 @@ jobs:
       - name: Validate test suite
         run: python -m pytest
       - name: Promote candidate if gates pass
-        run: python -m baitdetector.promote
+        run: |
+          OUTCOME=$(python -m baitdetector.promote)
+          echo "## Promotion outcome: ${OUTCOME}" >> "$GITHUB_STEP_SUMMARY"
+          echo '```json' >> "$GITHUB_STEP_SUMMARY"
+          python -c "import json; print(json.dumps(json.load(open('data/models/candidate/metadata.json')).get('promotion', {}), indent=2, default=str))" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
       - name: Assert promoted bundle is complete
         run: python scripts/model_data_branch.py --repo-root . assert-promoted --model-dir data/models/promoted
       - name: Configure git author

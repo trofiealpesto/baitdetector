@@ -87,6 +87,15 @@ def test_train_model_bootstrap_fallback_with_two_snapshots(tmp_path, monkeypatch
     assert summary["promotion"]["recommended"] is False
 
 
+def test_passes_shared_benchmark_gates_allows_small_regression() -> None:
+    current = {"pr_auc": 0.94, "roc_auc": 0.73, "false_positive_rate": 0.25}
+    near_candidate = {"pr_auc": 0.935, "roc_auc": 0.725, "false_positive_rate": 0.255}
+    far_candidate = {"pr_auc": 0.92, "roc_auc": 0.73, "false_positive_rate": 0.25}
+
+    assert train_module.passes_shared_benchmark_gates(near_candidate, current) is True
+    assert train_module.passes_shared_benchmark_gates(far_candidate, current) is False
+
+
 def test_temporal_training_promote_and_api_scan_end_to_end(tmp_path, monkeypatch) -> None:
     settings = build_test_settings(tmp_path)
     write_demo_snapshots(settings)

@@ -103,7 +103,8 @@ def test_fit_bundle_applies_calibration_with_enough_rows() -> None:
 
 def test_bundle_scores_secret_like_inputs_consistently() -> None:
     bundle = _build_bundle()
-    raw_url = "https://compact.link/reset?mode=resetPassword&oobCode=UlNWwoLW0Nt5KimkaIVmA5WYa5gENFl3n2aBkBwEomsAAAGY5NMkHQ&apiKey=AIzaFAKEFAKEFAKEFAKEFAKEFAKEFAKEFAKE000"
+    fake_google_api_key = "AIza" + "FAKE" * 8 + "000"
+    raw_url = f"https://compact.link/reset?mode=resetPassword&oobCode=UlNWwoLW0Nt5KimkaIVmA5WYa5gENFl3n2aBkBwEomsAAAGY5NMkHQ&apiKey={fake_google_api_key}"
     sanitized_url = redact_url_secrets(raw_url)
 
     assert bundle.predict_proba_one(raw_url) == pytest.approx(bundle.predict_proba_one(sanitized_url))

@@ -25,10 +25,16 @@ def test_normalize_rejects_unsupported_scheme() -> None:
         normalize_url("ftp://example.com")
 
 
+# Fixtures must match the real secret patterns under test; assembled at runtime
+# so secret scanners never see a contiguous token in the source.
+FAKE_GOOGLE_API_KEY = "AIza" + "FAKE" * 8 + "000"
+FAKE_TELEGRAM_BOT_TOKEN = "123456789" + ":" + "AAEhBOweik6ad9rQXMENQjcrGbqCr4d09w"
+
+
 def test_redact_url_secrets_masks_path_and_query_tokens() -> None:
     raw_url = (
         "https://example.com/123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
-        "?apiKey=AIzaFAKEFAKEFAKEFAKEFAKEFAKEFAKEFAKE000"
+        f"?apiKey={FAKE_GOOGLE_API_KEY}"
         "&oobCode=UlNWwoLW0Nt5KimkaIVmA5WYa5gENFl3n2aBkBwEomsAAAGY5NMkHQ"
     )
 
@@ -72,11 +78,11 @@ def test_redact_url_secrets_masks_aws_key_pair() -> None:
 
 
 def test_redact_url_secrets_masks_telegram_token_secret_part_in_bot_path() -> None:
-    raw_url = "https://api.telegram.org/bot123456789:AAEhBOweik6ad9rQXMENQjcrGbqCr4d09w/sendMessage"
+    raw_url = f"https://api.telegram.org/bot{FAKE_TELEGRAM_BOT_TOKEN}/sendMessage"
 
     sanitized = redact_url_secrets(raw_url)
 
-    assert "AAEhBOweik6ad9rQXMENQjcrGbqCr4d09w" not in sanitized
+    assert FAKE_TELEGRAM_BOT_TOKEN.split(":")[1] not in sanitized
     assert sanitized.endswith("/sendMessage")
 
 

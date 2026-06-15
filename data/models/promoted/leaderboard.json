@@ -1,6 +1,6 @@
 [
   {
-    "model_version": "baitdetector-20260402T120904Z-logistic_baseline",
+    "model_version": "baitdetector-20260615T095402Z-logistic_baseline",
     "model_id": "logistic_baseline",
     "model_family": "logistic_regression",
     "hyperparameters": {
@@ -10,64 +10,64 @@
       "C": 2.0
     },
     "calibration": {
-      "status": "skipped",
-      "reason": "insufficient_validation_rows",
-      "rows": 18
+      "status": "applied",
+      "method": "sigmoid",
+      "rows": 974945
     },
     "thresholds": {
-      "suspicious": 0.0181,
-      "phishing": 0.7782
+      "suspicious": 0.5526,
+      "phishing": 0.5526
     },
     "validation_metrics": {
-      "rows": 18,
-      "positives": 9,
-      "negatives": 9,
-      "roc_auc": 0.9136,
-      "pr_auc": 0.9514,
-      "precision": 1.0,
-      "recall": 0.8889,
-      "false_positive_rate": 0.0,
-      "decision_threshold": 0.7782,
+      "rows": 974945,
+      "positives": 777161,
+      "negatives": 197784,
+      "roc_auc": 0.9883,
+      "pr_auc": 0.9974,
+      "precision": 0.9979,
+      "recall": 0.9732,
+      "false_positive_rate": 0.008,
+      "decision_threshold": 0.5526,
       "runtime_thresholds": {
-        "suspicious": 0.0181,
-        "phishing": 0.7782
+        "suspicious": 0.5526,
+        "phishing": 0.5526
       }
     },
     "benchmark_metrics": {
-      "rows": 18,
-      "positives": 10,
-      "negatives": 8,
-      "roc_auc": 0.9875,
-      "pr_auc": 0.9909,
-      "precision": 1.0,
-      "recall": 0.7,
-      "false_positive_rate": 0.0,
-      "decision_threshold": 0.7782,
+      "rows": 974942,
+      "positives": 777158,
+      "negatives": 197784,
+      "roc_auc": 0.9883,
+      "pr_auc": 0.9974,
+      "precision": 0.9979,
+      "recall": 0.9732,
+      "false_positive_rate": 0.008,
+      "decision_threshold": 0.5526,
       "runtime_thresholds": {
-        "suspicious": 0.0181,
-        "phishing": 0.7782
+        "suspicious": 0.5526,
+        "phishing": 0.5526
       }
     },
     "unseen_domain_metrics": {
-      "rows": 18,
-      "positives": 10,
-      "negatives": 8,
-      "roc_auc": 0.9875,
-      "pr_auc": 0.9909,
-      "precision": 1.0,
-      "recall": 0.7,
-      "false_positive_rate": 0.0,
-      "decision_threshold": 0.7782,
+      "rows": 730794,
+      "positives": 533029,
+      "negatives": 197765,
+      "roc_auc": 0.9829,
+      "pr_auc": 0.9948,
+      "precision": 0.997,
+      "recall": 0.961,
+      "false_positive_rate": 0.0079,
+      "decision_threshold": 0.5526,
       "runtime_thresholds": {
-        "suspicious": 0.0181,
-        "phishing": 0.7782
+        "suspicious": 0.5526,
+        "phishing": 0.5526
       }
     },
-    "promotion_outcome": "shared_benchmark_regression",
+    "promotion_outcome": "promoted_candidate",
     "rank": 1
   },
   {
-    "model_version": "baitdetector-20260402T120904Z-sgd_log_loss",
+    "model_version": "baitdetector-20260615T095402Z-sgd_log_loss",
     "model_id": "sgd_log_loss",
     "model_family": "sgd_classifier",
     "hyperparameters": {
@@ -79,125 +79,125 @@
       "tol": 0.001
     },
     "calibration": {
-      "status": "skipped",
-      "reason": "insufficient_validation_rows",
-      "rows": 18
+      "status": "applied",
+      "method": "sigmoid",
+      "rows": 974945
     },
     "thresholds": {
-      "suspicious": 0.0,
-      "phishing": 0.0
+      "suspicious": 0.4793,
+      "phishing": 0.4793
     },
     "validation_metrics": {
-      "rows": 18,
-      "positives": 9,
-      "negatives": 9,
-      "roc_auc": 0.8333,
-      "pr_auc": 0.8333,
-      "precision": 0.5,
-      "recall": 1.0,
-      "false_positive_rate": 1.0,
-      "decision_threshold": 0.0,
+      "rows": 974945,
+      "positives": 777161,
+      "negatives": 197784,
+      "roc_auc": 0.9832,
+      "pr_auc": 0.9964,
+      "precision": 0.9908,
+      "recall": 0.9675,
+      "false_positive_rate": 0.0353,
+      "decision_threshold": 0.4793,
       "runtime_thresholds": {
-        "suspicious": 0.0,
-        "phishing": 0.0
+        "suspicious": 0.4793,
+        "phishing": 0.4793
       }
     },
     "benchmark_metrics": {
-      "rows": 18,
-      "positives": 10,
-      "negatives": 8,
-      "roc_auc": 0.75,
-      "pr_auc": 0.7778,
-      "precision": 0.5556,
-      "recall": 1.0,
-      "false_positive_rate": 1.0,
-      "decision_threshold": 0.0,
+      "rows": 974942,
+      "positives": 777158,
+      "negatives": 197784,
+      "roc_auc": 0.9832,
+      "pr_auc": 0.9964,
+      "precision": 0.9908,
+      "recall": 0.9675,
+      "false_positive_rate": 0.0353,
+      "decision_threshold": 0.4793,
       "runtime_thresholds": {
-        "suspicious": 0.0,
-        "phishing": 0.0
+        "suspicious": 0.4793,
+        "phishing": 0.4793
       }
     },
     "unseen_domain_metrics": {
-      "rows": 18,
-      "positives": 10,
-      "negatives": 8,
-      "roc_auc": 0.75,
-      "pr_auc": 0.7778,
-      "precision": 0.5556,
-      "recall": 1.0,
-      "false_positive_rate": 1.0,
-      "decision_threshold": 0.0,
+      "rows": 730794,
+      "positives": 533029,
+      "negatives": 197765,
+      "roc_auc": 0.9756,
+      "pr_auc": 0.9927,
+      "precision": 0.9865,
+      "recall": 0.9526,
+      "false_positive_rate": 0.0352,
+      "decision_threshold": 0.4793,
       "runtime_thresholds": {
-        "suspicious": 0.0,
-        "phishing": 0.0
+        "suspicious": 0.4793,
+        "phishing": 0.4793
       }
     },
     "promotion_outcome": "not_selected",
     "rank": 2
   },
   {
-    "model_version": "baitdetector-20260402T120904Z-logistic_sparse_l1",
+    "model_version": "baitdetector-20260615T095402Z-logistic_sparse_l1",
     "model_id": "logistic_sparse_l1",
     "model_family": "logistic_regression",
     "hyperparameters": {
       "max_iter": 2000,
       "class_weight": "balanced",
       "solver": "liblinear",
-      "penalty": "l1",
+      "l1_ratio": 1.0,
       "C": 1.0
     },
     "calibration": {
-      "status": "skipped",
-      "reason": "insufficient_validation_rows",
-      "rows": 18
+      "status": "applied",
+      "method": "sigmoid",
+      "rows": 974945
     },
     "thresholds": {
-      "suspicious": 0.8904,
-      "phishing": 0.8904
+      "suspicious": 0.3507,
+      "phishing": 0.5833
     },
     "validation_metrics": {
-      "rows": 18,
-      "positives": 9,
-      "negatives": 9,
-      "roc_auc": 0.4938,
-      "pr_auc": 0.6527,
-      "precision": 0.5333,
-      "recall": 0.8889,
-      "false_positive_rate": 0.7778,
-      "decision_threshold": 0.8904,
+      "rows": 974945,
+      "positives": 777161,
+      "negatives": 197784,
+      "roc_auc": 0.9124,
+      "pr_auc": 0.9801,
+      "precision": 0.9489,
+      "recall": 0.8804,
+      "false_positive_rate": 0.1863,
+      "decision_threshold": 0.5833,
       "runtime_thresholds": {
-        "suspicious": 0.8904,
-        "phishing": 0.8904
+        "suspicious": 0.3507,
+        "phishing": 0.5833
       }
     },
     "benchmark_metrics": {
-      "rows": 18,
-      "positives": 10,
-      "negatives": 8,
-      "roc_auc": 0.2625,
-      "pr_auc": 0.5698,
-      "precision": 0.5556,
-      "recall": 1.0,
-      "false_positive_rate": 1.0,
-      "decision_threshold": 0.8904,
+      "rows": 974942,
+      "positives": 777158,
+      "negatives": 197784,
+      "roc_auc": 0.9124,
+      "pr_auc": 0.9801,
+      "precision": 0.9489,
+      "recall": 0.8804,
+      "false_positive_rate": 0.1863,
+      "decision_threshold": 0.5833,
       "runtime_thresholds": {
-        "suspicious": 0.8904,
-        "phishing": 0.8904
+        "suspicious": 0.3507,
+        "phishing": 0.5833
       }
     },
     "unseen_domain_metrics": {
-      "rows": 18,
-      "positives": 10,
-      "negatives": 8,
-      "roc_auc": 0.2625,
-      "pr_auc": 0.5698,
-      "precision": 0.5556,
-      "recall": 1.0,
-      "false_positive_rate": 1.0,
-      "decision_threshold": 0.8904,
+      "rows": 730794,
+      "positives": 533029,
+      "negatives": 197765,
+      "roc_auc": 0.8724,
+      "pr_auc": 0.9595,
+      "precision": 0.9228,
+      "recall": 0.8256,
+      "false_positive_rate": 0.1862,
+      "decision_threshold": 0.5833,
       "runtime_thresholds": {
-        "suspicious": 0.8904,
-        "phishing": 0.8904
+        "suspicious": 0.3507,
+        "phishing": 0.5833
       }
     },
     "promotion_outcome": "not_selected",

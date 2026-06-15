@@ -1,18 +1,18 @@
 {
-  "fetched_at": "2026-06-15T07:09:46.097455+00:00",
+  "fetched_at": "2026-06-15T09:53:04.658106+00:00",
   "sources": {
     "phishing_database": {
-      "last_modified": "Mon, 15 Jun 2026 05:30:22 GMT",
+      "last_modified": "Mon, 15 Jun 2026 09:30:22 GMT",
       "count": 719923
     },
     "phishtank": {
       "last_modified": null,
-      "count": 57238
+      "count": 57235
     },
     "tranco": {
       "last_modified": null,
       "count": 197784
     }
   },
-  "total_rows": 974945
+  "total_rows": 974942
 }

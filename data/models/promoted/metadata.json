@@ -1,27 +1,142 @@
 {
-  "model_version": "baitdetector-20260322T155055Z",
+  "model_version": "baitdetector-20260615T095402Z-logistic_baseline",
+  "model_id": "logistic_baseline",
+  "model_family": "logistic_regression",
   "training_window": {
-    "start": "2026-01-03T00:00:00+00:00",
-    "end": "2026-03-21T16:02:00+00:00",
-    "train_rows": 43,
-    "test_rows": 11
+    "start": "2026-03-13T18:30:23+00:00",
+    "end": "2026-06-14T06:28:03.771264+00:00",
+    "rows": 42368,
+    "snapshot_count": 5,
+    "snapshot_paths": [
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260403T042457Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260612T062816Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260612T225950Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260613T061057Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260614T062804Z.parquet"
+    ]
+  },
+  "validation_window": {
+    "start": "2026-06-15T05:30:22+00:00",
+    "end": "2026-06-15T07:11:11.904206+00:00",
+    "rows": 974945,
+    "snapshot_count": 1,
+    "snapshot_paths": [
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260615T071112Z.parquet"
+    ]
+  },
+  "benchmark_window": {
+    "start": "2026-06-15T09:30:22+00:00",
+    "end": "2026-06-15T09:53:51.057845+00:00",
+    "rows": 974942,
+    "snapshot_count": 1,
+    "snapshot_paths": [
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260615T095351Z.parquet"
+    ]
   },
   "feature_set_version": "2026-03-22",
+  "evaluation_mode": "temporal_benchmark",
+  "runtime_thresholds": {
+    "suspicious": 0.5526,
+    "phishing": 0.5526
+  },
   "source_freshness": {
-    "phishing_database": "2026-03-20T11:18:00+00:00",
-    "phishtank": "2026-03-21T16:02:00+00:00",
-    "tranco": "2026-03-21T00:00:00+00:00"
+    "phishing_database": "2026-06-15T09:30:22+00:00",
+    "phishtank": "2026-06-15T09:53:51.057845+00:00",
+    "tranco": "2026-06-15T09:53:51.057845+00:00"
+  },
+  "hyperparameters": {
+    "max_iter": 2000,
+    "class_weight": "balanced",
+    "solver": "liblinear",
+    "C": 2.0
   },
   "evaluation": {
-    "roc_auc": 1.0,
-    "pr_auc": 1.0,
-    "precision": 1.0,
-    "recall": 0.8571,
-    "false_positive_rate": 0.0,
-    "decision_threshold": 0.8887,
+    "rows": 974942,
+    "positives": 777158,
+    "negatives": 197784,
+    "roc_auc": 0.9883,
+    "pr_auc": 0.9974,
+    "precision": 0.9979,
+    "recall": 0.9732,
+    "false_positive_rate": 0.008,
+    "decision_threshold": 0.5526,
     "runtime_thresholds": {
-      "suspicious": 0.25,
-      "phishing": 0.45
+      "suspicious": 0.5526,
+      "phishing": 0.5526
+    }
+  },
+  "calibration": {
+    "status": "applied",
+    "method": "sigmoid",
+    "rows": 974945
+  },
+  "validation_evaluation": {
+    "rows": 974945,
+    "positives": 777161,
+    "negatives": 197784,
+    "roc_auc": 0.9883,
+    "pr_auc": 0.9974,
+    "precision": 0.9979,
+    "recall": 0.9732,
+    "false_positive_rate": 0.008,
+    "decision_threshold": 0.5526,
+    "runtime_thresholds": {
+      "suspicious": 0.5526,
+      "phishing": 0.5526
+    }
+  },
+  "benchmark_unseen_domain_evaluation": {
+    "rows": 730794,
+    "positives": 533029,
+    "negatives": 197765,
+    "roc_auc": 0.9829,
+    "pr_auc": 0.9948,
+    "precision": 0.997,
+    "recall": 0.961,
+    "false_positive_rate": 0.0079,
+    "decision_threshold": 0.5526,
+    "runtime_thresholds": {
+      "suspicious": 0.5526,
+      "phishing": 0.5526
+    }
+  },
+  "promotion": {
+    "recommended": true,
+    "reason": "shared_benchmark_win",
+    "current_promoted_benchmark": {
+      "model_version": "baitdetector-20260322T155055Z",
+      "model_id": "current_promoted",
+      "model_family": "unknown",
+      "evaluation": {
+        "rows": 974942,
+        "positives": 777158,
+        "negatives": 197784,
+        "roc_auc": 0.7048,
+        "pr_auc": 0.9282,
+        "precision": 0.9177,
+        "recall": 0.6696,
+        "false_positive_rate": 0.2361,
+        "decision_threshold": 0.45,
+        "runtime_thresholds": {
+          "suspicious": 0.25,
+          "phishing": 0.45
+        }
+      },
+      "benchmark_unseen_domain_evaluation": {
+        "rows": 730794,
+        "positives": 533029,
+        "negatives": 197765,
+        "roc_auc": 0.8309,
+        "pr_auc": 0.9468,
+        "precision": 0.9018,
+        "recall": 0.8046,
+        "false_positive_rate": 0.2361,
+        "decision_threshold": 0.45,
+        "runtime_thresholds": {
+          "suspicious": 0.25,
+          "phishing": 0.45
+        }
+      }
     }
   }
 }

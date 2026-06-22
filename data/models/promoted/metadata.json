@@ -1,48 +1,56 @@
 {
-  "model_version": "baitdetector-20260615T095402Z-logistic_baseline",
+  "model_version": "baitdetector-20260622T094206Z-logistic_baseline",
   "model_id": "logistic_baseline",
   "model_family": "logistic_regression",
   "training_window": {
     "start": "2026-03-13T18:30:23+00:00",
-    "end": "2026-06-14T06:28:03.771264+00:00",
-    "rows": 42368,
-    "snapshot_count": 5,
+    "end": "2026-06-21T06:45:43.710953+00:00",
+    "rows": 50184,
+    "snapshot_count": 13,
     "snapshot_paths": [
       "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260403T042457Z.parquet",
       "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260612T062816Z.parquet",
       "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260612T225950Z.parquet",
       "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260613T061057Z.parquet",
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260614T062804Z.parquet"
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260614T062804Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260615T071112Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260615T095351Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260616T071652Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260617T070148Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260618T064632Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260619T065926Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260620T061415Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260621T064544Z.parquet"
     ]
   },
   "validation_window": {
-    "start": "2026-06-15T05:30:22+00:00",
-    "end": "2026-06-15T07:11:11.904206+00:00",
-    "rows": 974945,
+    "start": "2026-06-22T05:30:22+00:00",
+    "end": "2026-06-22T07:14:39.172802+00:00",
+    "rows": 975437,
     "snapshot_count": 1,
     "snapshot_paths": [
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260615T071112Z.parquet"
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260622T071439Z.parquet"
     ]
   },
   "benchmark_window": {
-    "start": "2026-06-15T09:30:22+00:00",
-    "end": "2026-06-15T09:53:51.057845+00:00",
-    "rows": 974942,
+    "start": "2026-06-22T09:30:22+00:00",
+    "end": "2026-06-22T09:41:44.695658+00:00",
+    "rows": 975408,
     "snapshot_count": 1,
     "snapshot_paths": [
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260615T095351Z.parquet"
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260622T094145Z.parquet"
     ]
   },
   "feature_set_version": "2026-03-22",
   "evaluation_mode": "temporal_benchmark",
   "runtime_thresholds": {
-    "suspicious": 0.5526,
-    "phishing": 0.5526
+    "suspicious": 0.5326,
+    "phishing": 0.5326
   },
   "source_freshness": {
-    "phishing_database": "2026-06-15T09:30:22+00:00",
-    "phishtank": "2026-06-15T09:53:51.057845+00:00",
-    "tranco": "2026-06-15T09:53:51.057845+00:00"
+    "phishing_database": "2026-06-22T09:30:22+00:00",
+    "phishtank": "2026-06-22T09:41:44.695658+00:00",
+    "tranco": "2026-06-22T09:41:44.695658+00:00"
   },
   "hyperparameters": {
     "max_iter": 2000,
@@ -51,90 +59,90 @@
     "C": 2.0
   },
   "evaluation": {
-    "rows": 974942,
-    "positives": 777158,
-    "negatives": 197784,
-    "roc_auc": 0.9883,
-    "pr_auc": 0.9974,
-    "precision": 0.9979,
-    "recall": 0.9732,
-    "false_positive_rate": 0.008,
-    "decision_threshold": 0.5526,
+    "rows": 975408,
+    "positives": 777612,
+    "negatives": 197796,
+    "roc_auc": 0.9893,
+    "pr_auc": 0.9976,
+    "precision": 0.9981,
+    "recall": 0.9752,
+    "false_positive_rate": 0.0074,
+    "decision_threshold": 0.5326,
     "runtime_thresholds": {
-      "suspicious": 0.5526,
-      "phishing": 0.5526
+      "suspicious": 0.5326,
+      "phishing": 0.5326
     }
   },
   "calibration": {
     "status": "applied",
     "method": "sigmoid",
-    "rows": 974945
+    "rows": 975437
   },
   "validation_evaluation": {
-    "rows": 974945,
-    "positives": 777161,
-    "negatives": 197784,
-    "roc_auc": 0.9883,
-    "pr_auc": 0.9974,
-    "precision": 0.9979,
-    "recall": 0.9732,
-    "false_positive_rate": 0.008,
-    "decision_threshold": 0.5526,
+    "rows": 975437,
+    "positives": 777641,
+    "negatives": 197796,
+    "roc_auc": 0.9893,
+    "pr_auc": 0.9976,
+    "precision": 0.9981,
+    "recall": 0.9752,
+    "false_positive_rate": 0.0074,
+    "decision_threshold": 0.5326,
     "runtime_thresholds": {
-      "suspicious": 0.5526,
-      "phishing": 0.5526
+      "suspicious": 0.5326,
+      "phishing": 0.5326
     }
   },
   "benchmark_unseen_domain_evaluation": {
-    "rows": 730794,
-    "positives": 533029,
-    "negatives": 197765,
-    "roc_auc": 0.9829,
-    "pr_auc": 0.9948,
-    "precision": 0.997,
-    "recall": 0.961,
-    "false_positive_rate": 0.0079,
-    "decision_threshold": 0.5526,
+    "rows": 729763,
+    "positives": 531985,
+    "negatives": 197778,
+    "roc_auc": 0.9844,
+    "pr_auc": 0.9953,
+    "precision": 0.9972,
+    "recall": 0.9638,
+    "false_positive_rate": 0.0073,
+    "decision_threshold": 0.5326,
     "runtime_thresholds": {
-      "suspicious": 0.5526,
-      "phishing": 0.5526
+      "suspicious": 0.5326,
+      "phishing": 0.5326
     }
   },
   "promotion": {
     "recommended": true,
     "reason": "shared_benchmark_win",
     "current_promoted_benchmark": {
-      "model_version": "baitdetector-20260322T155055Z",
-      "model_id": "current_promoted",
-      "model_family": "unknown",
+      "model_version": "baitdetector-20260615T095402Z-logistic_baseline",
+      "model_id": "logistic_baseline",
+      "model_family": "logistic_regression",
       "evaluation": {
-        "rows": 974942,
-        "positives": 777158,
-        "negatives": 197784,
-        "roc_auc": 0.7048,
-        "pr_auc": 0.9282,
-        "precision": 0.9177,
-        "recall": 0.6696,
-        "false_positive_rate": 0.2361,
-        "decision_threshold": 0.45,
+        "rows": 975408,
+        "positives": 777612,
+        "negatives": 197796,
+        "roc_auc": 0.9883,
+        "pr_auc": 0.9974,
+        "precision": 0.9979,
+        "recall": 0.9732,
+        "false_positive_rate": 0.0079,
+        "decision_threshold": 0.5526,
         "runtime_thresholds": {
-          "suspicious": 0.25,
-          "phishing": 0.45
+          "suspicious": 0.5526,
+          "phishing": 0.5526
         }
       },
       "benchmark_unseen_domain_evaluation": {
-        "rows": 730794,
-        "positives": 533029,
-        "negatives": 197765,
-        "roc_auc": 0.8309,
-        "pr_auc": 0.9468,
-        "precision": 0.9018,
-        "recall": 0.8046,
-        "false_positive_rate": 0.2361,
-        "decision_threshold": 0.45,
+        "rows": 729763,
+        "positives": 531985,
+        "negatives": 197778,
+        "roc_auc": 0.983,
+        "pr_auc": 0.9948,
+        "precision": 0.997,
+        "recall": 0.961,
+        "false_positive_rate": 0.0078,
+        "decision_threshold": 0.5526,
         "runtime_thresholds": {
-          "suspicious": 0.25,
-          "phishing": 0.45
+          "suspicious": 0.5526,
+          "phishing": 0.5526
         }
       }
     }

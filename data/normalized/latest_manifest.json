@@ -1,8 +1,8 @@
 {
-  "fetched_at": "2026-07-17T04:56:27.990764+00:00",
+  "fetched_at": "2026-07-18T04:40:52.617292+00:00",
   "sources": {
     "phishing_database": {
-      "last_modified": "Fri, 17 Jul 2026 03:30:23 GMT",
+      "last_modified": "Sat, 18 Jul 2026 03:30:22 GMT",
       "count": 719914
     },
     "phishtank": {

@@ -1,148 +1,150 @@
 {
-  "model_version": "baitdetector-20260622T094206Z-logistic_baseline",
-  "model_id": "logistic_baseline",
-  "model_family": "logistic_regression",
+  "model_version": "baitdetector-20260914T092640Z-sgd_log_loss",
+  "model_id": "sgd_log_loss",
+  "model_family": "sgd_classifier",
   "training_window": {
-    "start": "2026-03-13T18:30:23+00:00",
-    "end": "2026-06-21T06:45:43.710953+00:00",
-    "rows": 50184,
+    "start": "2026-07-21T05:14:40.152305+00:00",
+    "end": "2026-08-23T02:56:27.077145+00:00",
+    "rows": 39746,
     "snapshot_count": 13,
     "snapshot_paths": [
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260403T042457Z.parquet",
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260612T062816Z.parquet",
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260612T225950Z.parquet",
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260613T061057Z.parquet",
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260614T062804Z.parquet",
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260615T071112Z.parquet",
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260615T095351Z.parquet",
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260616T071652Z.parquet",
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260617T070148Z.parquet",
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260618T064632Z.parquet",
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260619T065926Z.parquet",
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260620T061415Z.parquet",
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260621T064544Z.parquet"
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260721T051440Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260722T051252Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260723T051908Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260724T051459Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260725T045935Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260726T052538Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260727T054303Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260727T065658Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260729T051459Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260730T045129Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260731T052924Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260801T052133Z.parquet",
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260823T025627Z.parquet"
     ]
   },
   "validation_window": {
-    "start": "2026-06-22T05:30:22+00:00",
-    "end": "2026-06-22T07:14:39.172802+00:00",
-    "rows": 975437,
+    "start": "2026-09-14T05:30:24+00:00",
+    "end": "2026-09-14T07:24:34.168029+00:00",
+    "rows": 987380,
     "snapshot_count": 1,
     "snapshot_paths": [
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260622T071439Z.parquet"
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260914T072434Z.parquet"
     ]
   },
   "benchmark_window": {
-    "start": "2026-06-22T09:30:22+00:00",
-    "end": "2026-06-22T09:41:44.695658+00:00",
-    "rows": 975408,
+    "start": "2026-09-14T07:30:22+00:00",
+    "end": "2026-09-14T09:26:16.188804+00:00",
+    "rows": 987380,
     "snapshot_count": 1,
     "snapshot_paths": [
-      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260622T094145Z.parquet"
+      "/home/runner/work/baitdetector/baitdetector/data/normalized/urls-20260914T092616Z.parquet"
     ]
   },
   "feature_set_version": "2026-03-22",
   "evaluation_mode": "temporal_benchmark",
   "runtime_thresholds": {
-    "suspicious": 0.5326,
-    "phishing": 0.5326
+    "suspicious": 0.5613,
+    "phishing": 0.5613
   },
   "source_freshness": {
-    "phishing_database": "2026-06-22T09:30:22+00:00",
-    "phishtank": "2026-06-22T09:41:44.695658+00:00",
-    "tranco": "2026-06-22T09:41:44.695658+00:00"
+    "phishing_database": "2026-09-14T07:30:22+00:00",
+    "phishtank": "2026-09-14T09:26:16.188804+00:00",
+    "tranco": "2026-09-14T09:26:16.188804+00:00"
   },
   "hyperparameters": {
-    "max_iter": 2000,
+    "loss": "log_loss",
+    "alpha": 1e-05,
     "class_weight": "balanced",
-    "solver": "liblinear",
-    "C": 2.0
+    "max_iter": 2000,
+    "random_state": 42,
+    "tol": 0.001
   },
   "evaluation": {
-    "rows": 975408,
-    "positives": 777612,
-    "negatives": 197796,
-    "roc_auc": 0.9893,
-    "pr_auc": 0.9976,
-    "precision": 0.9981,
-    "recall": 0.9752,
-    "false_positive_rate": 0.0074,
-    "decision_threshold": 0.5326,
+    "rows": 987380,
+    "positives": 789575,
+    "negatives": 197805,
+    "roc_auc": 0.9916,
+    "pr_auc": 0.9982,
+    "precision": 0.9958,
+    "recall": 0.977,
+    "false_positive_rate": 0.0166,
+    "decision_threshold": 0.5613,
     "runtime_thresholds": {
-      "suspicious": 0.5326,
-      "phishing": 0.5326
+      "suspicious": 0.5613,
+      "phishing": 0.5613
     }
   },
   "calibration": {
     "status": "applied",
     "method": "sigmoid",
-    "rows": 975437
+    "rows": 987380
   },
   "validation_evaluation": {
-    "rows": 975437,
-    "positives": 777641,
-    "negatives": 197796,
-    "roc_auc": 0.9893,
-    "pr_auc": 0.9976,
-    "precision": 0.9981,
-    "recall": 0.9752,
-    "false_positive_rate": 0.0074,
-    "decision_threshold": 0.5326,
+    "rows": 987380,
+    "positives": 789575,
+    "negatives": 197805,
+    "roc_auc": 0.9916,
+    "pr_auc": 0.9982,
+    "precision": 0.9958,
+    "recall": 0.977,
+    "false_positive_rate": 0.0166,
+    "decision_threshold": 0.5613,
     "runtime_thresholds": {
-      "suspicious": 0.5326,
-      "phishing": 0.5326
+      "suspicious": 0.5613,
+      "phishing": 0.5613
     }
   },
   "benchmark_unseen_domain_evaluation": {
-    "rows": 729763,
-    "positives": 531985,
-    "negatives": 197778,
-    "roc_auc": 0.9844,
-    "pr_auc": 0.9953,
-    "precision": 0.9972,
-    "recall": 0.9638,
-    "false_positive_rate": 0.0073,
-    "decision_threshold": 0.5326,
+    "rows": 948653,
+    "positives": 750850,
+    "negatives": 197803,
+    "roc_auc": 0.9912,
+    "pr_auc": 0.998,
+    "precision": 0.9955,
+    "recall": 0.9758,
+    "false_positive_rate": 0.0166,
+    "decision_threshold": 0.5613,
     "runtime_thresholds": {
-      "suspicious": 0.5326,
-      "phishing": 0.5326
+      "suspicious": 0.5613,
+      "phishing": 0.5613
     }
   },
   "promotion": {
     "recommended": true,
     "reason": "shared_benchmark_win",
     "current_promoted_benchmark": {
-      "model_version": "baitdetector-20260615T095402Z-logistic_baseline",
+      "model_version": "baitdetector-20260622T094206Z-logistic_baseline",
       "model_id": "logistic_baseline",
       "model_family": "logistic_regression",
       "evaluation": {
-        "rows": 975408,
-        "positives": 777612,
-        "negatives": 197796,
-        "roc_auc": 0.9883,
-        "pr_auc": 0.9974,
-        "precision": 0.9979,
-        "recall": 0.9732,
-        "false_positive_rate": 0.0079,
-        "decision_threshold": 0.5526,
+        "rows": 987380,
+        "positives": 789575,
+        "negatives": 197805,
+        "roc_auc": 0.9895,
+        "pr_auc": 0.9977,
+        "precision": 0.9981,
+        "recall": 0.9748,
+        "false_positive_rate": 0.0072,
+        "decision_threshold": 0.5326,
         "runtime_thresholds": {
-          "suspicious": 0.5526,
-          "phishing": 0.5526
+          "suspicious": 0.5326,
+          "phishing": 0.5326
         }
       },
       "benchmark_unseen_domain_evaluation": {
-        "rows": 729763,
-        "positives": 531985,
-        "negatives": 197778,
-        "roc_auc": 0.983,
-        "pr_auc": 0.9948,
-        "precision": 0.997,
-        "recall": 0.961,
-        "false_positive_rate": 0.0078,
-        "decision_threshold": 0.5526,
+        "rows": 948653,
+        "positives": 750850,
+        "negatives": 197803,
+        "roc_auc": 0.989,
+        "pr_auc": 0.9975,
+        "precision": 0.998,
+        "recall": 0.9735,
+        "false_positive_rate": 0.0072,
+        "decision_threshold": 0.5326,
         "runtime_thresholds": {
-          "suspicious": 0.5526,
-          "phishing": 0.5526
+          "suspicious": 0.5326,
+          "phishing": 0.5326
         }
       }
     }

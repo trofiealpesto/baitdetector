@@ -1,73 +1,6 @@
 [
   {
-    "model_version": "baitdetector-20260622T094206Z-logistic_baseline",
-    "model_id": "logistic_baseline",
-    "model_family": "logistic_regression",
-    "hyperparameters": {
-      "max_iter": 2000,
-      "class_weight": "balanced",
-      "solver": "liblinear",
-      "C": 2.0
-    },
-    "calibration": {
-      "status": "applied",
-      "method": "sigmoid",
-      "rows": 975437
-    },
-    "thresholds": {
-      "suspicious": 0.5326,
-      "phishing": 0.5326
-    },
-    "validation_metrics": {
-      "rows": 975437,
-      "positives": 777641,
-      "negatives": 197796,
-      "roc_auc": 0.9893,
-      "pr_auc": 0.9976,
-      "precision": 0.9981,
-      "recall": 0.9752,
-      "false_positive_rate": 0.0074,
-      "decision_threshold": 0.5326,
-      "runtime_thresholds": {
-        "suspicious": 0.5326,
-        "phishing": 0.5326
-      }
-    },
-    "benchmark_metrics": {
-      "rows": 975408,
-      "positives": 777612,
-      "negatives": 197796,
-      "roc_auc": 0.9893,
-      "pr_auc": 0.9976,
-      "precision": 0.9981,
-      "recall": 0.9752,
-      "false_positive_rate": 0.0074,
-      "decision_threshold": 0.5326,
-      "runtime_thresholds": {
-        "suspicious": 0.5326,
-        "phishing": 0.5326
-      }
-    },
-    "unseen_domain_metrics": {
-      "rows": 729763,
-      "positives": 531985,
-      "negatives": 197778,
-      "roc_auc": 0.9844,
-      "pr_auc": 0.9953,
-      "precision": 0.9972,
-      "recall": 0.9638,
-      "false_positive_rate": 0.0073,
-      "decision_threshold": 0.5326,
-      "runtime_thresholds": {
-        "suspicious": 0.5326,
-        "phishing": 0.5326
-      }
-    },
-    "promotion_outcome": "promoted_candidate",
-    "rank": 1
-  },
-  {
-    "model_version": "baitdetector-20260622T094206Z-sgd_log_loss",
+    "model_version": "baitdetector-20260914T092640Z-sgd_log_loss",
     "model_id": "sgd_log_loss",
     "model_family": "sgd_classifier",
     "hyperparameters": {
@@ -81,62 +14,129 @@
     "calibration": {
       "status": "applied",
       "method": "sigmoid",
-      "rows": 975437
+      "rows": 987380
     },
     "thresholds": {
-      "suspicious": 0.4887,
-      "phishing": 0.4887
+      "suspicious": 0.5613,
+      "phishing": 0.5613
     },
     "validation_metrics": {
-      "rows": 975437,
-      "positives": 777641,
-      "negatives": 197796,
-      "roc_auc": 0.9809,
-      "pr_auc": 0.9959,
-      "precision": 0.9959,
-      "recall": 0.9649,
-      "false_positive_rate": 0.0155,
-      "decision_threshold": 0.4887,
+      "rows": 987380,
+      "positives": 789575,
+      "negatives": 197805,
+      "roc_auc": 0.9916,
+      "pr_auc": 0.9982,
+      "precision": 0.9958,
+      "recall": 0.977,
+      "false_positive_rate": 0.0166,
+      "decision_threshold": 0.5613,
       "runtime_thresholds": {
-        "suspicious": 0.4887,
-        "phishing": 0.4887
+        "suspicious": 0.5613,
+        "phishing": 0.5613
       }
     },
     "benchmark_metrics": {
-      "rows": 975408,
-      "positives": 777612,
-      "negatives": 197796,
-      "roc_auc": 0.9809,
-      "pr_auc": 0.9959,
-      "precision": 0.9959,
-      "recall": 0.9649,
-      "false_positive_rate": 0.0155,
-      "decision_threshold": 0.4887,
+      "rows": 987380,
+      "positives": 789575,
+      "negatives": 197805,
+      "roc_auc": 0.9916,
+      "pr_auc": 0.9982,
+      "precision": 0.9958,
+      "recall": 0.977,
+      "false_positive_rate": 0.0166,
+      "decision_threshold": 0.5613,
       "runtime_thresholds": {
-        "suspicious": 0.4887,
-        "phishing": 0.4887
+        "suspicious": 0.5613,
+        "phishing": 0.5613
       }
     },
     "unseen_domain_metrics": {
-      "rows": 729763,
-      "positives": 531985,
-      "negatives": 197778,
-      "roc_auc": 0.9721,
-      "pr_auc": 0.9918,
-      "precision": 0.994,
-      "recall": 0.9487,
-      "false_positive_rate": 0.0154,
-      "decision_threshold": 0.4887,
+      "rows": 948653,
+      "positives": 750850,
+      "negatives": 197803,
+      "roc_auc": 0.9912,
+      "pr_auc": 0.998,
+      "precision": 0.9955,
+      "recall": 0.9758,
+      "false_positive_rate": 0.0166,
+      "decision_threshold": 0.5613,
       "runtime_thresholds": {
-        "suspicious": 0.4887,
-        "phishing": 0.4887
+        "suspicious": 0.5613,
+        "phishing": 0.5613
+      }
+    },
+    "promotion_outcome": "promoted_candidate",
+    "rank": 1
+  },
+  {
+    "model_version": "baitdetector-20260914T092640Z-logistic_baseline",
+    "model_id": "logistic_baseline",
+    "model_family": "logistic_regression",
+    "hyperparameters": {
+      "max_iter": 2000,
+      "class_weight": "balanced",
+      "solver": "liblinear",
+      "C": 2.0
+    },
+    "calibration": {
+      "status": "applied",
+      "method": "sigmoid",
+      "rows": 987380
+    },
+    "thresholds": {
+      "suspicious": 0.529,
+      "phishing": 0.529
+    },
+    "validation_metrics": {
+      "rows": 987380,
+      "positives": 789575,
+      "negatives": 197805,
+      "roc_auc": 0.9883,
+      "pr_auc": 0.9975,
+      "precision": 0.9979,
+      "recall": 0.9724,
+      "false_positive_rate": 0.0082,
+      "decision_threshold": 0.529,
+      "runtime_thresholds": {
+        "suspicious": 0.529,
+        "phishing": 0.529
+      }
+    },
+    "benchmark_metrics": {
+      "rows": 987380,
+      "positives": 789575,
+      "negatives": 197805,
+      "roc_auc": 0.9883,
+      "pr_auc": 0.9975,
+      "precision": 0.9979,
+      "recall": 0.9724,
+      "false_positive_rate": 0.0082,
+      "decision_threshold": 0.529,
+      "runtime_thresholds": {
+        "suspicious": 0.529,
+        "phishing": 0.529
+      }
+    },
+    "unseen_domain_metrics": {
+      "rows": 948653,
+      "positives": 750850,
+      "negatives": 197803,
+      "roc_auc": 0.9877,
+      "pr_auc": 0.9972,
+      "precision": 0.9978,
+      "recall": 0.971,
+      "false_positive_rate": 0.0082,
+      "decision_threshold": 0.529,
+      "runtime_thresholds": {
+        "suspicious": 0.529,
+        "phishing": 0.529
       }
     },
     "promotion_outcome": "not_selected",
     "rank": 2
   },
   {
-    "model_version": "baitdetector-20260622T094206Z-logistic_sparse_l1",
+    "model_version": "baitdetector-20260914T092640Z-logistic_sparse_l1",
     "model_id": "logistic_sparse_l1",
     "model_family": "logistic_regression",
     "hyperparameters": {
@@ -149,55 +149,55 @@
     "calibration": {
       "status": "applied",
       "method": "sigmoid",
-      "rows": 975437
+      "rows": 987380
     },
     "thresholds": {
-      "suspicious": 0.3404,
-      "phishing": 0.5411
+      "suspicious": 0.3518,
+      "phishing": 0.5705
     },
     "validation_metrics": {
-      "rows": 975437,
-      "positives": 777641,
-      "negatives": 197796,
-      "roc_auc": 0.967,
-      "pr_auc": 0.9925,
-      "precision": 0.9865,
-      "recall": 0.924,
-      "false_positive_rate": 0.0499,
-      "decision_threshold": 0.5411,
+      "rows": 987380,
+      "positives": 789575,
+      "negatives": 197805,
+      "roc_auc": 0.962,
+      "pr_auc": 0.9914,
+      "precision": 0.9783,
+      "recall": 0.92,
+      "false_positive_rate": 0.0816,
+      "decision_threshold": 0.5705,
       "runtime_thresholds": {
-        "suspicious": 0.3404,
-        "phishing": 0.5411
+        "suspicious": 0.3518,
+        "phishing": 0.5705
       }
     },
     "benchmark_metrics": {
-      "rows": 975408,
-      "positives": 777612,
-      "negatives": 197796,
-      "roc_auc": 0.967,
-      "pr_auc": 0.9925,
-      "precision": 0.9865,
-      "recall": 0.924,
-      "false_positive_rate": 0.0499,
-      "decision_threshold": 0.5411,
+      "rows": 987380,
+      "positives": 789575,
+      "negatives": 197805,
+      "roc_auc": 0.962,
+      "pr_auc": 0.9914,
+      "precision": 0.9783,
+      "recall": 0.92,
+      "false_positive_rate": 0.0816,
+      "decision_threshold": 0.5705,
       "runtime_thresholds": {
-        "suspicious": 0.3404,
-        "phishing": 0.5411
+        "suspicious": 0.3518,
+        "phishing": 0.5705
       }
     },
     "unseen_domain_metrics": {
-      "rows": 729763,
-      "positives": 531985,
-      "negatives": 197778,
-      "roc_auc": 0.9518,
-      "pr_auc": 0.9847,
-      "precision": 0.9796,
-      "recall": 0.889,
-      "false_positive_rate": 0.0498,
-      "decision_threshold": 0.5411,
+      "rows": 948653,
+      "positives": 750850,
+      "negatives": 197803,
+      "roc_auc": 0.9601,
+      "pr_auc": 0.9906,
+      "precision": 0.9771,
+      "recall": 0.9158,
+      "false_positive_rate": 0.0816,
+      "decision_threshold": 0.5705,
       "runtime_thresholds": {
-        "suspicious": 0.3404,
-        "phishing": 0.5411
+        "suspicious": 0.3518,
+        "phishing": 0.5705
       }
     },
     "promotion_outcome": "not_selected",
